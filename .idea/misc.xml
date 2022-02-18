@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/drawable/bg_img.xml" value="0.1" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/drawable/border_edt.xml" value="0.1" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/drawable/ic_email.xml" value="0.1" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_add_garden.xml" value="0.17300724637681159" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_add_gardent.xml" value="0.22" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_add_home.xml" value="0.1" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_area_list.xml" value="0.1716485507246377" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_area_manage.xml" value="0.1796875" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_device_manage.xml" value="0.1" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_garden_manage.xml" value="0.1796875" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/activity_sign_up.xml" value="0.3333333333333333" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/dialog_add_area.xml" value="0.3333333333333333" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/dialog_add_device.xml" value="0.3333333333333333" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/dialog_add_garden.xml" value="0.22" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/item_area.xml" value="0.1796875" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/item_device.xml" value="0.25" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/item_garden.xml" value="0.1796875" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/item_gardent.xml" value="0.5" />
+        <entry key="..\:/Document/Projects/IoTApp/app/src/main/res/layout/item_home.xml" value="0.1716485507246377" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
