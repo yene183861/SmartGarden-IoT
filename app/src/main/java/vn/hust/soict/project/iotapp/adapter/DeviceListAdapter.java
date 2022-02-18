@@ -47,47 +47,26 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         holder.value.setText(""+this.deviceList.get(position).getValue());
         holder.tvPosition.setText("Position: " + this.deviceList.get(position).getPosition());
         int type = this.deviceList.get(position).getType();
-        int imgCode = R.drawable.temper;
+        int imgCode;
         boolean status = this.deviceList.get(position).isStatus();
         if (status) {
             holder.tvStatus.setText("Status: On");
         } else
             holder.tvStatus.setText("Status: Off");
-        //holder.control.setChecked(status);
         switch (type) {
             case 1:
                 imgCode = R.drawable.temper;
-//                holder.control.setVisibility(View.GONE);
                 break;
             case 2: //2 đo độ ẩm đất
                 imgCode = R.drawable.soil_moisture;
-//                if (status) {
-//                    imgCode = R.drawable.wartering;
-//                } else {
-//                    imgCode = R.drawable.not_watering;
-//                }
                 break;
             case 3:
                 imgCode = R.drawable.air_humidity;
-                //holder.control.setVisibility(View.GONE);
                 break;
             default: //4 la den
                 imgCode = R.drawable.brightness;
-//                if (status) {
-//                    imgCode = R.drawable.lamp_on;
-//                } else {
-//                    imgCode = R.drawable.lamp_off;
-//                }
-//                break;
         }
         holder.img.setImageResource(imgCode);
-
-//        holder.control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                clickListener.onControlClick(deviceList.get(position), isChecked);
-//            }
-//        });
 
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +109,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
     }
 
     public interface ItemClickListener {
-        void onControlClick(Device device, boolean isChecked);
 
         void onEditClick(Device device);
 

@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,7 +141,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 //            public void onServiceDisconnected(ComponentName name) {
 //            }
 //        }, Context.BIND_AUTO_CREATE);
-
+        listener();
         Device device = new Device("nhiet do", "khu 10 cuoi vuon", 1, 27, true);
         Device device1 = new Device("do am dat", "khu 10 cuoi vuon", 2, 10, true);
         Device device2 = new Device("anh sang", "khu 10 cuoi vuon", 4, 34, true);
@@ -164,7 +165,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 } else {
                     deviceList = devices;
                     adapter.setDeviceList(devices);
-                    //rcvGarden.setAdapter(adapter);
                     tvNoDeviceList.setVisibility(View.GONE);
                     rcvDevice.setVisibility(View.VISIBLE);
                 }
@@ -192,23 +192,28 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 showAddDialog(false);
             }
         });
-        controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(DeviceManageActivity.this, "on", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(DeviceManageActivity.this, "off", Toast.LENGTH_SHORT).show();
-
-
-                }
-            }
-        });
         controlWatering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                if(isChecked){
+                    imgWatering.setImageResource(R.drawable.watering);
+                } else {
+                    imgWatering.setImageResource(R.drawable.not_watering);
+                }
+                Device device2 = new Device("id", "idUser",  isChecked, 2);
+                publish(device2, WATER_TOPIC);
+            }
+        });
+        controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    imgLamp.setImageResource(R.drawable.lamp_on);
+                } else {
+                    imgLamp.setImageResource(R.drawable.lamp_off);
+                }
+                Device device2 = new Device("id", "idUser", isChecked, 4);
+                publish(device2, LUX_TOPIC);
             }
         });
     }
@@ -236,6 +241,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     @Override
     protected void onDestroy() {
         disconnectMQTT();
+        Log.e("onDestroy", "onDestroy");
         super.onDestroy();
     }
 
@@ -290,12 +296,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         dialogBuilder.show();
     }
 
-
-    @Override
-    public void onControlClick(Device device, boolean isChecked) {
-
-    }
-
     @Override
     public void onEditClick(Device device) {
 
@@ -320,7 +320,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     // We are connected
                     //Log.e("id client mqtt", DataLocalManager.getClientId());
                     Log.e("connect mqtt", "onSuccess");
-                    Toast.makeText(DeviceManageActivity.this, "connect mqtt success", Toast.LENGTH_SHORT).show();
                     subscribeChannel(topic);
                 }
 
@@ -353,32 +352,33 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
                         Log.d("subscribe", "message>>" + new String(message.getPayload()));
                         Log.d("subscribe", "topic>>" + topic);
-//                        parseMqttMessage(new String(message.getPayload()));
-//                        String str = new String(message.getPayload());
                         JSONObject jsonObject = new JSONObject(new String(message.getPayload()));
                         Gson gson = new Gson();
                         DataReceive data = gson.fromJson(jsonObject.toString(), DataReceive.class);
                         int n = deviceList.size();
                         int type;
                         if (data instanceof DataReceive) {
-                            for(int i = 0; i < n; i++){
+                            for (int i = 0; i < n; i++) {
                                 type = deviceList.get(i).getType();
-                                switch (type){
-                                    case 1: deviceList.get(i).setValue(Integer.parseInt(data.getTemperature())); break;
-                                    case 2: deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_soil())); break;
-                                    case 3: deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air())); break;
-                                    default: deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air()));
+                                switch (type) {
+                                    case 1:
+                                        deviceList.get(i).setValue(Integer.parseInt(data.getTemperature()));
+                                        break;
+                                    case 2:
+                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_soil()));
+                                        break;
+                                    case 3:
+                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air()));
+                                        break;
+                                    default:
+                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air()));
                                 }
                             }
                             adapter.setDeviceList(deviceList);
-
                             rcvDevice.setAdapter(adapter);
-                            //Log.e("mess receive: ", data.toString());
                         } else {
                             Log.e("mess receive: ", "error");
                         }
-
-
                     }
 
                     @Override
@@ -390,10 +390,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         } catch (Exception e) {
             Log.d("mqtt", "Error :" + e);
         }
-    }
-
-    private void parseMqttMessage(String s) {
-        Log.e("message receive", s);
     }
 
     private void disconnectMQTT() {
@@ -419,25 +415,21 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             }
         }
     }
-//    private void publish(String id, String status, String topic){
-//        String payload = "the payload";
-//        byte[] encodedPayload = new byte[0];
-//        boolean status = true;
-//        //String status = null;
-//        if(client.isConnected()){
-//            try {
-//                MqttMessage message = new MqttMessage();
-//                JSONObject jsonObj = new JSONObject();
-//                jsonObj.accumulate("deviceId", id);
-//                jsonObj.accumulate("status", status);
-//                String obj = jsonObj.toString();
-//                message.setPayload(obj.getBytes());
-//                client.publish(topic, message);
-//            } catch (UnsupportedEncodingException | MqttException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+
+    private void publish(Device device, String topic) {
+        if (client.isConnected()) {
+            try {
+                Gson gson = new Gson();
+                String json = gson.toJson(device);
+                MqttMessage message = new MqttMessage(json.getBytes("UTF-8"));
+                client.publish(topic, message);
+            } catch (UnsupportedEncodingException | MqttException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(DeviceManageActivity.this,"publish error",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
 

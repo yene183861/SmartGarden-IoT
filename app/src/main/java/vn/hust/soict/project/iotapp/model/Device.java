@@ -26,6 +26,13 @@ public class Device {
         this.value = value;
         this.status = status;
     }
+    public Device(String id, String idArea, boolean status, int type) {
+        this.id = id;
+        this.idArea = idArea;
+        this.type = type;
+        this.status = status;
+    }
+
 
     public String getName() {
         return name;
