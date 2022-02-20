@@ -35,10 +35,6 @@ public class Device {
         this.status = status;
     }
 
-    public Device(int value) {
-        this.value = value;
-    }
-
     public String getName() {
         return name;
     }

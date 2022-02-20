@@ -1,5 +1,6 @@
 package vn.hust.soict.project.iotapp.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -30,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -46,7 +50,9 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import vn.hust.soict.project.iotapp.MyService;
 import vn.hust.soict.project.iotapp.R;
@@ -67,8 +73,10 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     private List<Device> deviceList = new ArrayList<>();
     private DeviceListAdapter adapter;
     private Device deviceForEdit;
+    public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
+    private Handler handler;
     String topic = "iot-nhom8-20211/#";
     public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/dht11/temperature";
     public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/dht11/humidity";
@@ -80,10 +88,11 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_manage);
-getSupportActionBar().setTitle("Manage Device");
+        getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
         initUi();
         connectMQTT();
+        initHandler();
 
         Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 0, true);
         Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 0, true);
@@ -114,6 +123,7 @@ getSupportActionBar().setTitle("Manage Device");
             }
         });
         //deviceListViewModel.getDeviceList(area.getId());
+
         initListener();
     }
 
@@ -134,6 +144,19 @@ getSupportActionBar().setTitle("Manage Device");
         txtAcreage.setText("Acreage: " + String.valueOf(area.getAcreage()) + " (m2)");
     }
 
+    private void initHandler() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case MSG_GET_DEVICES:
+                        deviceList = null;
+                }
+                super.handleMessage(msg);
+            }
+        };
+    }
+
     private void initListener() {
         btnAddNewDevice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +172,11 @@ getSupportActionBar().setTitle("Manage Device");
                 } else {
                     imgWatering.setImageResource(R.drawable.not_watering);
                 }
-                //Device device2 = new Device("id", "idArea", isChecked, 2);
-                //subscribeChannel(WATER_TOPIC);
-                //publish(device2, WATER_TOPIC);
+                int type;
+                if (isChecked) {
+                    type = 1;
+                } else type = 0;
+                publish(0, type, SOILMOIST_TOPIC);
             }
         });
         controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -162,9 +187,11 @@ getSupportActionBar().setTitle("Manage Device");
                 } else {
                     imgLamp.setImageResource(R.drawable.lamp_off);
                 }
-//                Device device2 = new Device("id", "idArea", isChecked, 4);
-//                subscribeChannel(LAMP_TOPIC);
-//                publish(device2, LAMP_TOPIC);
+                int type;
+                if (isChecked) {
+                    type = 1;
+                } else type = 0;
+                publish(1, type, LAMP_TOPIC);
             }
         });
     }
@@ -193,7 +220,7 @@ getSupportActionBar().setTitle("Manage Device");
         if (isEdit) {
             addDeviceTitleDialog.setText("Update information device");
             btnCreateDevice.setText("Update");
-            enterNameDevice.setText(deviceForEdit.getValue());
+            enterNameDevice.setText(deviceForEdit.getName());
             enterPositionDevice.setText(deviceForEdit.getPosition());
             switch (deviceForEdit.getType()) {
                 case 1:
@@ -308,30 +335,32 @@ getSupportActionBar().setTitle("Manage Device");
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
                         Log.d("subscribe", "topic>>" + topic);
-                        JSONObject jsonObject = new JSONObject(new String(message.getPayload()));
-                        Gson gson = new Gson();
-                        Device device = gson.fromJson(jsonObject.toString(), Device.class);
+//                        String json = new String(message.getPayload());
+//                        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
-                        int n = deviceList.size();
-                        if (device instanceof Device) {
-                            for (int i = 0; i < n; i++) {
-                                int type = deviceList.get(i).getType();
-                                if (topicName.compareTo(TEMPERATURE_TOPIC) == 0 && type == 1) {
-                                    Log.e("test: ", "TEMPERATURE_TOPIC " + topicName.compareTo(TEMPERATURE_TOPIC) + "type" + type);
-                                    deviceList.get(i).setValue(device.getValue());
-                                } else if (topicName.compareTo(HUMIDITY_TOPIC) == 0 && type == 2) {
-                                    Log.e("test: ", "HUMIDITY_TOPIC " + topicName.compareTo(HUMIDITY_TOPIC) + "type" + type);
-                                    deviceList.get(i).setValue(device.getValue());
-                                } else {
-                                    Log.e("test: ", " WATER_TOPIC" + topicName.compareTo(SOILMOIST_TOPIC) + "type" + type);
-                                    deviceList.get(i).setValue(device.getValue());
-                                }
-                            }
-                            adapter.setDeviceList(deviceList);
-                            rcvDevice.setAdapter(adapter);
-                        } else {
-                            Log.e("mess receive: ", "error");
-                        }
+                        //Device device = gson.fromJson(jsonObject.toString(), Device.class);
+//                        int n = deviceList.size();
+//
+////                        if (device instanceof Device) {
+//                            for (int i = 0; i < n; i++) {
+//                                int type = deviceList.get(i).getType();
+//                                if (type == 1) {
+//                                    Log.e("test: ", "TEMPERATURE_TOPIC " + topicName.compareTo(TEMPERATURE_TOPIC) + "type" + type);
+//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("temperature"))));
+//                                } else if (type == 2) {
+//                                    Log.e("test: ", "HUMIDITY_TOPIC " + topicName.compareTo(HUMIDITY_TOPIC) + "type" + type);
+//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("humidity"))));
+//                                } else {
+//                                    Log.e("test: ", " WATER_TOPIC" + topicName.compareTo(SOILMOIST_TOPIC) + "type" + type);
+//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("soil"))));
+//                                }
+//                            }
+//                            adapter.setDeviceList(deviceList);
+//                            rcvDevice.setAdapter(adapter);
+//                        }
+//                        else {
+//                            Log.e("mess receive: ", "error");
+//                        }
                     }
 
                     @Override
@@ -369,11 +398,19 @@ getSupportActionBar().setTitle("Manage Device");
         }
     }
 
-    private void publish(Device device, String topic) {
+    private void publish(int type, int status, String topic) {
         if (client.isConnected()) {
             try {
+                Map<String, Integer> inputMap = new HashMap<String, Integer>();
+                if (type == 1) {
+                    inputMap.put("Lamp", status);
+                } else {
+                    inputMap.put("Water", status);
+                }
                 Gson gson = new Gson();
-                String json = gson.toJson(device);
+                String json = gson.toJson(inputMap);
+                Log.e("mss", json);
+                //String json = gson.toJson(device);
                 MqttMessage message = new MqttMessage(json.getBytes("UTF-8"));
                 client.publish(topic, message);
             } catch (UnsupportedEncodingException | MqttException e) {
@@ -382,6 +419,28 @@ getSupportActionBar().setTitle("Manage Device");
         } else {
             Toast.makeText(DeviceManageActivity.this, "publish error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void createThread() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int time = 10;
+                do {
+                    time--;
+                    Message msg = new Message();
+                    msg.what = MSG_GET_DEVICES;
+                    msg.arg1 = time;
+//                    handler.sendMessage(msg);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while (time > 0);
+            }
+        });
+        thread.start();
     }
 
 }
