@@ -51,7 +51,7 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
         btnAddNewGarden = findViewById(R.id.btnAddNewGarden);
         rcvGarden = findViewById(R.id.rcvGarden);
         tvNoGardenList = findViewById(R.id.tvNoGardenList);
-        Garden garden1 = new Garden("DataLocalManager.getClientId()", "Vuon Dau Tay", "Mê Linh", 4, 120);
+        Garden garden1 = new Garden("DataLocalManager.getClientId()", "Vuon Dau Tay", "Mê Linh", 4, 129.4);
         Garden garden2 = new Garden("DataLocalManager.getClientId()", "Vuon Nho", "Mê Linh", 4, 120);
         gardenList.add(garden1);
         gardenList.add(garden2);

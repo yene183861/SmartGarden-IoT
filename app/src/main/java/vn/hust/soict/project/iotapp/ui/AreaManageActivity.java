@@ -44,8 +44,13 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         initUi();
         Area area1 = new Area("idGarden", "Khu vuc 1", "ben trái cuosi vươn", 34.2);
         Area area2 = new Area("idGarden", "Khu vuc 2", "ben phải cuosi vươn", 34.2);
+        Area area3 = new Area("idGarden", "Khu vuc 3", "ben trái cuosi vươn", 34.2);
+        Area area4 = new Area("idGarden", "Khu vuc 4", "ben trái cuosi vươn", 34.2);
+
         areaList.add(area1);
         areaList.add(area2);
+        areaList.add(area3);
+        areaList.add(area4);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvArea.setLayoutManager(linearLayoutManager);
@@ -147,7 +152,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
     @Override
     public void onAreaClick(Area area) {
         Intent intent = new Intent(AreaManageActivity.this, DeviceManageActivity.class);
-        //intent.putExtra("area", area);
+        intent.putExtra("area", area);
         startActivity(intent);
     }
 

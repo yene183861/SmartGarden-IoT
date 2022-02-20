@@ -59,7 +59,7 @@ import vn.hust.soict.project.iotapp.viewmodel.DeviceListViewModel;
 
 public class DeviceManageActivity extends AppCompatActivity implements DeviceListAdapter.ItemClickListener {
     private ImageView btnAddNewDevice, imgLamp, imgWatering;
-    private TextView tvNoDeviceList;
+    private TextView tvNoDeviceList, txtAreaName, txtAreaPosition, txtAcreage;
     private RecyclerView rcvDevice;
     private LinearLayout layoutControl;
     private Switch controlLamp, controlWatering;
@@ -80,7 +80,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_manage);
-
+getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
         initUi();
         connectMQTT();
@@ -126,6 +126,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         controlWatering = (Switch) findViewById(R.id.controlWatering);
         imgLamp = findViewById(R.id.imgLamp);
         imgWatering = findViewById(R.id.imgWatering);
+        txtAreaName = findViewById(R.id.txtAreaName);
+        txtAreaPosition = findViewById(R.id.txtAreaPosition);
+        txtAcreage = findViewById(R.id.txtAcreage);
+        txtAreaName.setText("Name area: " + area.getName());
+        txtAreaPosition.setText("Position: " + area.getPosition());
+        txtAcreage.setText("Acreage: " + String.valueOf(area.getAcreage()) + " (m2)");
     }
 
     private void initListener() {
