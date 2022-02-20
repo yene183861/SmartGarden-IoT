@@ -9,30 +9,35 @@ public class Device {
     private String name;
     private String position;
     private int type;
+    /*  1 cảm biến nhiệt độ
+        2 cảm biến độ ẩm đất
+        3 Cảm biến không khí
+    */
     private int value;
     private boolean status;
 
-    public Device(String name, String position, int type, boolean status) {
+
+    public Device(String idArea, String name, String position, int type,int value, boolean status) {
+        this.idArea = idArea;
         this.name = name;
         this.position = position;
         this.type = type;
         this.status = status;
     }
 
-    public Device(String name, String position, int type, int value, boolean status) {
+    public Device(String id, String idArea, String name, String position, int type, int value, boolean status) {
+        this.id = id;
+        this.idArea = idArea;
         this.name = name;
         this.position = position;
         this.type = type;
         this.value = value;
         this.status = status;
     }
-    public Device(String id, String idArea, boolean status, int type) {
-        this.id = id;
-        this.idArea = idArea;
-        this.type = type;
-        this.status = status;
-    }
 
+    public Device(int value) {
+        this.value = value;
+    }
 
     public String getName() {
         return name;

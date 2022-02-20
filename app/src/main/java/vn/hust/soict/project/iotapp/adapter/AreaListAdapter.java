@@ -46,15 +46,13 @@ public void setAreaList(List<Area> areaList){
     public void onBindViewHolder(@NonNull AreaViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvAreaName.setText(this.areaList.get(position).getName());
         holder.tvAreaPosition.setText(this.areaList.get(position).getPosition());
-//        if(this.gardenList.get(position).getImage() == null){
-            holder.imgArea.setImageResource(R.drawable.garden);
-//        } else {
-//            Glide.with(context)
-//                    .load(this.gardenList.get(position).getImage())
-//                    .apply(RequestOptions.centerCropTransform())
-//                    .into(holder.imgGarden);
-//        }
-
+      if(position % 3 == 0){
+          holder.imgArea.setImageResource(R.drawable.area1);
+      } else if(position % 3 == 1){
+          holder.imgArea.setImageResource(R.drawable.area2);
+      } else {
+          holder.imgArea.setImageResource(R.drawable.area3);
+      }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

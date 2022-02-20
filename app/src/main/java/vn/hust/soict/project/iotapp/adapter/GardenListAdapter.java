@@ -45,14 +45,11 @@ public void setGardenList(List<Garden> gardenList){
     public void onBindViewHolder(@NonNull GardenViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvGardenName.setText(this.gardenList.get(position).getName());
         holder.tvGardenAddress.setText(this.gardenList.get(position).getAddress());
-//        if(this.gardenList.get(position).getImage() == null){
+        if(position % 2 == 0){
             holder.imgGarden.setImageResource(R.drawable.garden);
-//        } else {
-//            Glide.with(context)
-//                    .load(this.gardenList.get(position).getImage())
-//                    .apply(RequestOptions.centerCropTransform())
-//                    .into(holder.imgGarden);
-//        }
+        } else {
+            holder.imgGarden.setImageResource(R.drawable.garden2);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

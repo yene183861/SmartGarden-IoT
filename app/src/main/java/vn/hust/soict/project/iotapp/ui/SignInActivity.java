@@ -69,13 +69,12 @@ public class SignInActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                             progressDialog.dismiss();
-                            User userResponse = response.body().getUser();
+                            User user = response.body().getUser();
                             DataLocalManager.setTokenServer(response.body().getToken());
-                            //Log.e("login", userResponse.toString());
-//                            Intent intent = new Intent(SignInActivity.this, GardenManageActivity.class);
-//                            intent.putExtra("user", userResponse);
-//                            startActivity(intent);
-//                            finishAffinity();
+                            DataLocalManager.setClientId(user.getId());
+                            Intent intent = new Intent(SignInActivity.this, GardenManageActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
                         }
 
                         @Override

@@ -18,14 +18,14 @@ import vn.hust.soict.project.iotapp.model.Garden;
 public class GardenListViewModel extends ViewModel {
     private MutableLiveData<List<Garden>> gardenListLiveData;
     private List<Garden> gardenList;
+    ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
+
 
     public GardenListViewModel() {
         gardenListLiveData = new MutableLiveData<>();
         gardenList = new ArrayList<>();
-//        gardenListLiveData.setValue(gardenList);
     }
     public void getGardenList(){
-        ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
         Call<List<Garden>> call = apiService.getGardenList(DataLocalManager.getTokenServer());
         call.enqueue(new Callback<List<Garden>>() {
             @Override
@@ -45,13 +45,14 @@ public class GardenListViewModel extends ViewModel {
     }
 
     public void insertGarden(Garden garden){
-        gardenList.add(garden);
-        gardenListLiveData.setValue(gardenList);
+//        gardenList.add(garden);
+//        adapter.setGardenList(gardenList);
+//        gardenListLiveData.setValue(gardenList);
     }
     public void updateGarden(String id, Garden garden){
         gardenListLiveData.setValue(gardenList);
     }
-    public void deleteGarden(String id){
+    public void deleteGarden(Garden garden){
 
     }
 }

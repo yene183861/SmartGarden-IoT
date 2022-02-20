@@ -36,4 +36,3 @@ public interface ApiService {
     @GET("/getDevice")
     Call<List<Device>> getDeviceList(@Header("token") String token,@Query("id") String id);
 }
-

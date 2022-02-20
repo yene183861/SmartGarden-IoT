@@ -22,13 +22,21 @@
             android:name=".ui.SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.AddGarden"
-            android:exported="false" />
-        <activity
             android:name=".ui.SignUpActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.DeviceManageActivity"
+<!--        <activity-->
+<!--            android:name=".ui.DeviceManageActivity"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+<!--        <activity-->
+<!--            android:name=".ui.GardenManageActivity"-->
+<!--            android:exported="false" />-->
+        <activity android:name=".ui.GardenManageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,9 +44,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".ui.GardenManageActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.DeviceManageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AreaManageActivity"
+            android:exported="false" />
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <service android:name=".MyService"/>
     </application>

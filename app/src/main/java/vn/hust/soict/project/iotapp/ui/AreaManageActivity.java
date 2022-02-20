@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.hust.soict.project.iotapp.R;
@@ -22,12 +23,12 @@ import vn.hust.soict.project.iotapp.model.Area;
 import vn.hust.soict.project.iotapp.model.Garden;
 import vn.hust.soict.project.iotapp.viewmodel.AreaListViewModel;
 
-public class AreaManageActivity extends AppCompatActivity implements AreaListAdapter.ItemClickListener{
+public class AreaManageActivity extends AppCompatActivity implements AreaListAdapter.ItemClickListener {
     private ImageView btnAddNewArea;
     private TextView tvNoAreaList;
     private RecyclerView rcvArea;
     private AreaListViewModel areaListViewModel;
-    private List<Area> areaList;
+    private List<Area> areaList = new ArrayList<>();
     private AreaListAdapter adapter;
     private Area areaForEdit;
     private Garden garden;
@@ -37,21 +38,25 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_manage);
 
-        garden = (Garden) getIntent().getSerializableExtra("garden");
-
+        //garden = (Garden) getIntent().getSerializableExtra("garden");
+        getSupportActionBar().setTitle("Manage Area");
         btnAddNewArea = findViewById(R.id.btnAddNewArea);
         rcvArea = findViewById(R.id.rcvArea);
         tvNoAreaList = findViewById(R.id.tvNoAreaList);
+        Area area1 = new Area("idGarden", "Khu vuc 1", "ben trái cuosi vươn", 34.2);
+        Area area2 = new Area("idGarden", "Khu vuc 2", "ben phải cuosi vươn", 34.2);
+        areaList.add(area1);
+        areaList.add(area2);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvArea.setLayoutManager(linearLayoutManager);
-        adapter = new AreaListAdapter(this ,areaList, this);
+        adapter = new AreaListAdapter(this, areaList, this);
         rcvArea.setAdapter(adapter);
         areaListViewModel = new ViewModelProvider(this).get(AreaListViewModel.class);
         areaListViewModel.getAreaListObserver().observe(this, new Observer<List<Area>>() {
             @Override
             public void onChanged(List<Area> areas) {
-                if(areas == null){
+                if (areas == null) {
                     rcvArea.setVisibility(View.GONE);
                     tvNoAreaList.setVisibility(View.VISIBLE);
                 } else {
@@ -63,7 +68,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
 
             }
         });
-        areaListViewModel.getAreaList(garden.getId());
+//        areaListViewModel.getAreaList(garden.getId());
         btnAddNewArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,29 +78,25 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
     }
 
 
-    private void showAddDialog(boolean isEdit){
+    private void showAddDialog(boolean isEdit) {
         AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_area, null);
-        TextView addAreaTitleDialog = dialogView.findViewById(R.id.addAreaTitleDialog);
-        EditText enterNameArea = dialogView.findViewById(R.id.enterNameArea);
-        EditText enterPositionArea = dialogView.findViewById(R.id.enterPositionArea);
-//        EditText enterAcreageGarden = dialogView.findViewById(R.id.enterAcreageGarden);
-//        EditText enterArea = dialogView.findViewById(R.id.enterArea);
-        // EditText enterImage = dialogView.findViewById(R.id.enterImage);
-        TextView btnCreateArea = dialogView.findViewById(R.id.btnCreateArea);
-        TextView btnCancelArea = dialogView.findViewById(R.id.btnCancelArea);
-//        ImageView chooseGardenImage = dialogView.findViewById(R.id.chooseGardenImage);
-//        imageHome = dialogView.findViewById(R.id.imageHome);
-        //    LinearLayout layout = dialogView.findViewById(R.id.layoutImgGarden);
-        //layout.setVisibility(View.GONE);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_garden, null);
+        TextView addAreaTitleDialog = dialogView.findViewById(R.id.addTitleDialog);
+        EditText enterNameArea = dialogView.findViewById(R.id.enterName);
+        EditText enterPositionArea = dialogView.findViewById(R.id.enterAddress);
+        EditText enterAcreage = dialogView.findViewById(R.id.enterAcreage);
+        TextView btnCreateArea = dialogView.findViewById(R.id.btnCreate);
+        TextView btnCancelArea = dialogView.findViewById(R.id.btnCancel);
+        TextView enterArea = dialogView.findViewById(R.id.enterArea);
+        enterArea.setVisibility(View.GONE);
 
-        if(isEdit){
+
+        if (isEdit) {
             addAreaTitleDialog.setText("Update information area");
             btnCreateArea.setText("Update");
             enterNameArea.setText(areaForEdit.getName());
             enterPositionArea.setText(areaForEdit.getPosition());
-            //enterAcreageGarden.setText(String.valueOf(gardenForEdit.getAcreage()));
-            //enterArea.setText(String.valueOf(gardenForEdit.getArea()));
+            enterAcreage.setText(String.valueOf(areaForEdit.getAcreage()));
         }
 
         btnCancelArea.setOnClickListener(new View.OnClickListener() {
@@ -109,22 +110,20 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
             public void onClick(View v) {
                 String name = enterNameArea.getText().toString().trim();
                 String position = enterPositionArea.getText().toString().trim();
-//                int area = Integer.parseInt(enterArea.getText().toString().trim());
-//                int acreage = Integer.parseInt(enterAcreageGarden.getText().toString().trim());
+                double acreage = Double.parseDouble(enterAcreage.getText().toString().trim());
 
                 //check fields empty
 
                 //call view model
-                if(isEdit){
+                if (isEdit) {
                     areaForEdit.setName(name);
                     areaForEdit.setPosition(position);
-//                    gardenForEdit.setAcreage(acreage);
-//                    gardenForEdit.setArea(acreage);
+                    areaForEdit.setAcreage(acreage);
                     areaListViewModel.updateArea(areaForEdit);
                 } else {
                     //call view model
-                    Area area = new Area(garden.getId(), name, position);
-                    areaListViewModel.insertArea(area);
+//                    Area area = new Area(garden.getId(), name, position);
+//                    areaListViewModel.insertArea(area);
                 }
                 dialogBuilder.dismiss();
             }
@@ -132,10 +131,11 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         dialogBuilder.setView(dialogView);
         dialogBuilder.show();
     }
+
     @Override
     public void onAreaClick(Area area) {
-        Intent intent = new Intent(AreaManageActivity.this, AreaManageActivity.class);
-        intent.putExtra("area", area);
+        Intent intent = new Intent(AreaManageActivity.this, DeviceManageActivity.class);
+        //intent.putExtra("area", area);
         startActivity(intent);
     }
 
@@ -147,10 +147,9 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
 
     @Override
     public void onAreaDeleteClick(Area area) {
-
+        areaListViewModel.deleteArea(area);
     }
 }
-
 
 
 

@@ -38,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser();
+                register();
             }
         });
     }
@@ -52,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
     }
 
-    private void registerUser() {
+    private void register() {
         String email = edtTxtEmail.getText().toString().trim();
         String password = edtTxtPassword.getText().toString().trim();
         String confirmPassword = edtTxtConfirmPassword.getText().toString().trim();
@@ -78,10 +78,8 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     progressDialog.dismiss();
                     if (response.code() == 200) {
-//                        User userResponse = response.body();
                         Toast.makeText(SignUpActivity.this, "Register success", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
-//                        intent.putExtra("user", userResponse);
                         startActivity(intent);
                         finishAffinity();
                     } else {

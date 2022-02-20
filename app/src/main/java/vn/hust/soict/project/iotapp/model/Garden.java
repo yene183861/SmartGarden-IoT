@@ -12,10 +12,10 @@ public class Garden implements Serializable {
     private String idUser;
     private String name;
     private String address;
-    private int area;
-    private int acreage; //dien tich
+    private int area; //số khu vực
+    private double acreage; //diện tích
 
-    public Garden(String id, String idUser, String name, String address, int area, int acreage) {
+    public Garden(String id, String idUser, String name, String address, int area, double acreage) {
         this.id = id;
         this.idUser = idUser;
         this.name = name;
@@ -24,13 +24,14 @@ public class Garden implements Serializable {
         this.acreage = acreage;
     }
 
-    public Garden(String idUser, String name, String address, int area, int acreage) {
+    public Garden(String idUser, String name, String address, int area, double acreage) {
         this.idUser = idUser;
         this.name = name;
         this.address = address;
         this.area = area;
         this.acreage = acreage;
     }
+
 
     public String getIdUser() {
         return idUser;
@@ -72,11 +73,11 @@ public class Garden implements Serializable {
         this.area = area;
     }
 
-    public int getAcreage() {
+    public double getAcreage() {
         return acreage;
     }
 
-    public void setAcreage(int acreage) {
+    public void setAcreage(double acreage) {
         this.acreage = acreage;
     }
 

@@ -7,33 +7,33 @@
     android:padding="20dp"
     tools:context=".ui.GardenManageActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvGarden"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingBottom="40dp"
-        android:layout_marginTop="10dp"/>
-    <ImageView
-        android:id="@+id/btnAddNewGarden"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_add"/>
-    <TextView
-        android:id="@+id/tvNoGardenList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="You don't have any garden list."
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:visibility="gone"/>
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/rcvGarden"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:paddingBottom="40dp"
+      android:layout_marginTop="10dp"/>
+  <ImageView
+      android:id="@+id/btnAddNewGarden"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:layout_margin="10dp"
+      android:src="@drawable/ic_add"/>
+  <TextView
+      android:id="@+id/tvNoGardenList"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:text="You don't have any garden list."
+      android:textSize="22sp"
+      android:textStyle="bold"
+      android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

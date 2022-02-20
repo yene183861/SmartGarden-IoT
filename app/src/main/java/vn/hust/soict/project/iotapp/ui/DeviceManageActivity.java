@@ -23,6 +23,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,57 +69,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     private Device deviceForEdit;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
-    String topic = "iot_application";
-    public static final String TEMPERATURE_TOPIC = "iot/dht11/temperature";
-    public static final String HUMIDITY_TOPIC = "iot/dht11/humility";
-    public static final String LUX_TOPIC = "iot/bh750/lux";
-    public static final String WATER_TOPIC = "iot/role/water";
-
-//    private Messenger messenger = null;
-//    private boolean isServiceConnected;
-//    private ServiceConnection serviceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            messenger = new Messenger(service);
-//            isServiceConnected = true;
-//            //send message connect mqtt
-//            sendMessageConnectMQTT();
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            messenger = null;
-//            isServiceConnected = false;
-//        }
-//    };
-
-//    private void sendMessageConnectMQTT() {
-//        Message message = Message.obtain(null, MyService.MSG_CONNECT_MQTT, 0, 0);
-//        try {
-//            messenger.send(message);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    Area area;
-//    public void sayHello(View v) {
-//        if (!isServiceConnected) return;
-//        // Create and send a message to the service, using a supported 'what' value
-//        Message msg = Message.obtain(null, MyService.MSG_CONNECT_MQTT, 0, 0);
-//        try {
-//            messenger.send(msg);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        Log.e("onStart", "onStart");
-//        //bind to the service
-//        bindService(new Intent(this, MyService.class),serviceConnection, Context.BIND_AUTO_CREATE);
-//    }
+    String topic = "iot-nhom8-20211/#";
+    public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/dht11/temperature";
+    public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/dht11/humidity";
+    public static final String LAMP_TOPIC = "iot-nhom8-20211/lamp";
+    public static final String SOILMOIST_TOPIC = "iot-nhom8-20211/soil";
+    private Area area;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,31 +85,16 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         initUi();
         connectMQTT();
 
-//        Intent serviceIntent = new Intent(context, ServedService.class);
-//        context.startService(serviceIntent);
-//        context.bindService(serviceIntent, new ServiceConnection() {
-//            @Override
-//            public void onServiceConnected(ComponentName name, IBinder service) {
-//                //retrieve an instance of the service here from the IBinder returned
-//                //from the onBind method to communicate with
-//            }
-//
-//            @Override
-//            public void onServiceDisconnected(ComponentName name) {
-//            }
-//        }, Context.BIND_AUTO_CREATE);
-        listener();
-        Device device = new Device("nhiet do", "khu 10 cuoi vuon", 1, 27, true);
-        Device device1 = new Device("do am dat", "khu 10 cuoi vuon", 2, 10, true);
-        Device device2 = new Device("anh sang", "khu 10 cuoi vuon", 4, 34, true);
-        Device device3 = new Device("do am kk", "khu 10 cuoi vuon", 3, 12, true);
+        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 0, true);
+        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 0, true);
+        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 3, 0, true);
         deviceList.add(device);
         deviceList.add(device1);
-        deviceList.add(device2);
         deviceList.add(device3);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvDevice.setLayoutManager(linearLayoutManager);
         adapter = new DeviceListAdapter(this, deviceList, (DeviceListAdapter.ItemClickListener) this);
+        //deviceListViewModel.getDeviceList(area.getId());
         adapter.setDeviceList(deviceList);
         rcvDevice.setAdapter(adapter);
         deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
@@ -172,6 +114,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             }
         });
         //deviceListViewModel.getDeviceList(area.getId());
+        initListener();
     }
 
     private void initUi() {
@@ -185,7 +128,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         imgWatering = findViewById(R.id.imgWatering);
     }
 
-    private void listener() {
+    private void initListener() {
         btnAddNewDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,47 +138,30 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         controlWatering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     imgWatering.setImageResource(R.drawable.watering);
                 } else {
                     imgWatering.setImageResource(R.drawable.not_watering);
                 }
-                Device device2 = new Device("id", "idUser",  isChecked, 2);
-                publish(device2, WATER_TOPIC);
+                //Device device2 = new Device("id", "idArea", isChecked, 2);
+                //subscribeChannel(WATER_TOPIC);
+                //publish(device2, WATER_TOPIC);
             }
         });
         controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     imgLamp.setImageResource(R.drawable.lamp_on);
                 } else {
                     imgLamp.setImageResource(R.drawable.lamp_off);
                 }
-                Device device2 = new Device("id", "idUser", isChecked, 4);
-                publish(device2, LUX_TOPIC);
+//                Device device2 = new Device("id", "idArea", isChecked, 4);
+//                subscribeChannel(LAMP_TOPIC);
+//                publish(device2, LAMP_TOPIC);
             }
         });
     }
-
-
-//    @Override
-//    protected void onDestroy() {
-//        if (isServiceConnected) {
-//            unbindService(serviceConnection);
-//            isServiceConnected = false;
-//        }
-//        super.onDestroy();
-//    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if(isServiceConnected){
-//            unbindService(serviceConnection);
-//            isServiceConnected = false;
-//        }
-//    }
 
 
     @Override
@@ -253,12 +179,27 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         EditText enterPositionDevice = dialogView.findViewById(R.id.enterPositionDevice);
         TextView btnCreateDevice = dialogView.findViewById(R.id.btnCreateDevice);
         TextView btnCancelDevice = dialogView.findViewById(R.id.btnCancelDevice);
+        RadioGroup radioGroupDeviceType = dialogView.findViewById(R.id.radioGroupDeviceType);
+        RadioButton radioButtonTemperature = dialogView.findViewById(R.id.radioButtonTemperature);
+        RadioButton radioButtonSoilMoisture = dialogView.findViewById(R.id.radioButtonSoilMoisture);
+        RadioButton radioButtonAirHumidity = dialogView.findViewById(R.id.radioButtonAirHumidity);
 
         if (isEdit) {
             addDeviceTitleDialog.setText("Update information device");
             btnCreateDevice.setText("Update");
             enterNameDevice.setText(deviceForEdit.getValue());
             enterPositionDevice.setText(deviceForEdit.getPosition());
+            switch (deviceForEdit.getType()) {
+                case 1:
+                    radioGroupDeviceType.check(R.id.radioButtonTemperature);
+                    break;
+                case 2:
+                    radioGroupDeviceType.check(R.id.radioButtonSoilMoisture);
+                    break;
+                case 3:
+                    radioGroupDeviceType.check(R.id.radioButtonAirHumidity);
+                    break;
+            }
         }
 
         btnCancelDevice.setOnClickListener(new View.OnClickListener() {
@@ -272,22 +213,32 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             public void onClick(View v) {
                 String name = enterNameDevice.getText().toString().trim();
                 String position = enterPositionDevice.getText().toString().trim();
-//                int area = Integer.parseInt(enterArea.getText().toString().trim());
-//                int acreage = Integer.parseInt(enterAcreageGarden.getText().toString().trim());
+                int type = radioGroupDeviceType.getCheckedRadioButtonId();
+
+                //check fields empty
+                if (type == R.id.radioButtonTemperature) {
+                    Log.e("radioButtonTemperature", " " + R.id.radioButtonTemperature);
+                    type = 1;
+                } else if (type == R.id.radioButtonSoilMoisture) {
+                    Log.e("radioButtonSoilMoisture", " " + R.id.radioButtonSoilMoisture);
+                    type = 2;
+                } else {
+                    Log.e("radioButtonAirHumidity", " " + R.id.radioButtonAirHumidity);
+                    type = 3;
+                }
 
                 //check fields empty
 
                 //call view model
                 if (isEdit) {
-//                    deviceForEdit.setName(name);
+                    deviceForEdit.setName(name);
                     deviceForEdit.setPosition(position);
-//                    gardenForEdit.setAcreage(acreage);
-//                    gardenForEdit.setArea(acreage);
+                    deviceForEdit.setType(type);
                     deviceListViewModel.updateDevice(deviceForEdit);
                 } else {
                     //call view model
-//                    Device device = new Device(area.getId(), name, position);
-//                    deviceListViewModel.insertDevice(device);
+                    Device device = new Device(area.getId(), name, position, type, 0, false);
+                    deviceListViewModel.insertDevice(device);
                 }
                 dialogBuilder.dismiss();
             }
@@ -298,12 +249,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 
     @Override
     public void onEditClick(Device device) {
-
+        deviceForEdit = device;
+        showAddDialog(true);
     }
 
     @Override
     public void onDeleteClick(Device device) {
-
+        deviceListViewModel.deleteDevice(device);
     }
 
     public void connectMQTT() {
@@ -311,14 +263,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         client =
                 new MqttAndroidClient(this.getApplicationContext(), "tcp://broker.hivemq.com:1883",
                         clientId);
-
         try {
             IMqttToken token = client.connect();
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     // We are connected
-                    //Log.e("id client mqtt", DataLocalManager.getClientId());
                     Log.e("connect mqtt", "onSuccess");
                     subscribeChannel(topic);
                 }
@@ -346,32 +296,29 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     @Override
                     public void connectionLost(Throwable cause) {
                         Log.e("subscribe", "Connection was lost!");
+                        connectMQTT();
                     }
 
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
-                        Log.d("subscribe", "message>>" + new String(message.getPayload()));
                         Log.d("subscribe", "topic>>" + topic);
                         JSONObject jsonObject = new JSONObject(new String(message.getPayload()));
                         Gson gson = new Gson();
-                        DataReceive data = gson.fromJson(jsonObject.toString(), DataReceive.class);
+                        Device device = gson.fromJson(jsonObject.toString(), Device.class);
+
                         int n = deviceList.size();
-                        int type;
-                        if (data instanceof DataReceive) {
+                        if (device instanceof Device) {
                             for (int i = 0; i < n; i++) {
-                                type = deviceList.get(i).getType();
-                                switch (type) {
-                                    case 1:
-                                        deviceList.get(i).setValue(Integer.parseInt(data.getTemperature()));
-                                        break;
-                                    case 2:
-                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_soil()));
-                                        break;
-                                    case 3:
-                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air()));
-                                        break;
-                                    default:
-                                        deviceList.get(i).setValue(Integer.parseInt(data.getHumidity_air()));
+                                int type = deviceList.get(i).getType();
+                                if (topicName.compareTo(TEMPERATURE_TOPIC) == 0 && type == 1) {
+                                    Log.e("test: ", "TEMPERATURE_TOPIC " + topicName.compareTo(TEMPERATURE_TOPIC) + "type" + type);
+                                    deviceList.get(i).setValue(device.getValue());
+                                } else if (topicName.compareTo(HUMIDITY_TOPIC) == 0 && type == 2) {
+                                    Log.e("test: ", "HUMIDITY_TOPIC " + topicName.compareTo(HUMIDITY_TOPIC) + "type" + type);
+                                    deviceList.get(i).setValue(device.getValue());
+                                } else {
+                                    Log.e("test: ", " WATER_TOPIC" + topicName.compareTo(SOILMOIST_TOPIC) + "type" + type);
+                                    deviceList.get(i).setValue(device.getValue());
                                 }
                             }
                             adapter.setDeviceList(deviceList);
@@ -427,13 +374,76 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(DeviceManageActivity.this,"publish error",Toast.LENGTH_SHORT).show();
+            Toast.makeText(DeviceManageActivity.this, "publish error", Toast.LENGTH_SHORT).show();
         }
     }
 
 }
+//    private Messenger messenger = null;
+//    private boolean isServiceConnected;
+//    private ServiceConnection serviceConnection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            messenger = new Messenger(service);
+//            isServiceConnected = true;
+//            //send message connect mqtt
+//            sendMessageConnectMQTT();
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            messenger = null;
+//            isServiceConnected = false;
+//        }
+//    };
+
+//    private void sendMessageConnectMQTT() {
+//        Message message = Message.obtain(null, MyService.MSG_CONNECT_MQTT, 0, 0);
+//        try {
+//            messenger.send(message);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        Log.e("onStart", "onStart");
+//        //bind to the service
+//        bindService(new Intent(this, MyService.class),serviceConnection, Context.BIND_AUTO_CREATE);
+//    }
+//    @Override
+//    protected void onDestroy() {
+//        if (isServiceConnected) {
+//            unbindService(serviceConnection);
+//            isServiceConnected = false;
+//        }
+//        super.onDestroy();
+//    }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if(isServiceConnected){
+//            unbindService(serviceConnection);
+//            isServiceConnected = false;
+//        }
+//    }
+//        Intent serviceIntent = new Intent(context, ServedService.class);
+//        context.startService(serviceIntent);
+//        context.bindService(serviceIntent, new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName name, IBinder service) {
+//                //retrieve an instance of the service here from the IBinder returned
+//                //from the onBind method to communicate with
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName name) {
+//            }
+//        }, Context.BIND_AUTO_CREATE);
 
 
 

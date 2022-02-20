@@ -55,6 +55,6 @@ public class AreaListViewModel extends ViewModel {
 
     }
     public void deleteArea(Area area){
-
+//        areaListLiveData.delete(areaList);
     }
 }
