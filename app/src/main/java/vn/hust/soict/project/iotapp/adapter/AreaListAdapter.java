@@ -38,7 +38,7 @@ public void setAreaList(List<Area> areaList){
     @NonNull
     @Override
     public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_area, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_garden, parent, false);
         return new AreaViewHolder(view);
     }
 
@@ -88,10 +88,10 @@ public void setAreaList(List<Area> areaList){
         public AreaViewHolder(@NonNull View itemView) {
             super(itemView);
             imgArea = itemView.findViewById(R.id.imgGarden);
-            imgEditArea = itemView.findViewById(R.id.imgEditArea);
-            imgDeleteArea = itemView.findViewById(R.id.imgDeleteArea);
-            tvAreaName = itemView.findViewById(R.id.tvAreaName);
-            tvAreaPosition = itemView.findViewById(R.id.tvAreaPosition);
+            imgEditArea = itemView.findViewById(R.id.imgEditGarden);
+            imgDeleteArea = itemView.findViewById(R.id.imgDeleteGarden);
+            tvAreaName = itemView.findViewById(R.id.tvGardenName);
+            tvAreaPosition = itemView.findViewById(R.id.tvGardenAddress);
         }
     }
     public interface ItemClickListener{
