@@ -25,7 +25,7 @@ import vn.hust.soict.project.iotapp.viewmodel.AreaListViewModel;
 
 public class AreaManageActivity extends AppCompatActivity implements AreaListAdapter.ItemClickListener {
     private ImageView btnAddNewArea;
-    private TextView tvNoAreaList;
+    private TextView tvNoAreaList, txtGardenName, txtGardenAddress, txtArea, txtGardenAcreage;
     private RecyclerView rcvArea;
     private AreaListViewModel areaListViewModel;
     private List<Area> areaList = new ArrayList<>();
@@ -38,11 +38,10 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_manage);
 
-        //garden = (Garden) getIntent().getSerializableExtra("garden");
+        garden = (Garden) getIntent().getSerializableExtra("garden");
         getSupportActionBar().setTitle("Manage Area");
-        btnAddNewArea = findViewById(R.id.btnAddNewArea);
-        rcvArea = findViewById(R.id.rcvArea);
-        tvNoAreaList = findViewById(R.id.tvNoAreaList);
+
+        initUi();
         Area area1 = new Area("idGarden", "Khu vuc 1", "ben trái cuosi vươn", 34.2);
         Area area2 = new Area("idGarden", "Khu vuc 2", "ben phải cuosi vươn", 34.2);
         areaList.add(area1);
@@ -75,6 +74,19 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
                 showAddDialog(false);
             }
         });
+    }
+    private void initUi(){
+        btnAddNewArea = findViewById(R.id.btnAddNewArea);
+        rcvArea = findViewById(R.id.rcvArea);
+        tvNoAreaList = findViewById(R.id.tvNoAreaList);
+        txtGardenName = findViewById(R.id.txtGardenName);
+        txtGardenAddress = findViewById(R.id.txtGardenAddress);
+        txtGardenAcreage = findViewById(R.id.txtGardenAcreage);
+        txtArea = findViewById(R.id.txtArea);
+        txtGardenName.setText("Name garden: " + garden.getName());
+        txtGardenAddress.setText("Address: " + garden.getAddress());
+        txtArea.setText("Area: " + String.valueOf(garden.getArea()));
+        txtGardenAcreage.setText("Acreage:" + String.valueOf(garden.getAcreage()) + " (m2)");
     }
 
 

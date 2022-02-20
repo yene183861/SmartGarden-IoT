@@ -93,7 +93,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
     public class DeviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, btnEdit, btnDelete;
         private TextView tvName, tvPosition, tvStatus, value;
-        private Switch control;
 
         public DeviceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -104,7 +103,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             tvPosition = itemView.findViewById(R.id.tvPosition);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             value = itemView.findViewById(R.id.value);
-            //control = itemView.findViewById(R.id.control);
         }
     }
 

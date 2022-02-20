@@ -145,7 +145,7 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
     @Override
     public void onGardenClick(Garden garden) {
         Intent intent = new Intent(GardenManageActivity.this, AreaManageActivity.class);
-        //intent.putExtra("garden", garden);
+        intent.putExtra("garden", garden);
         startActivity(intent);
     }
 

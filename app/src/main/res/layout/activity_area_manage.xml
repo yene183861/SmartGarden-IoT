@@ -6,12 +6,41 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context=".ui.AreaManageActivity">
+  <LinearLayout
+      android:id="@+id/layoutInfoGarden"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:orientation="vertical">
+    <TextView
+        android:id="@+id/txtGardenName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name garden: "/>
+    <TextView
+        android:id="@+id/txtGardenAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address: "/>
+    <TextView
+        android:id="@+id/txtArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Area: "/>
 
+    <TextView
+        android:id="@+id/txtGardenAcreage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Acreage: m2" />
+  </LinearLayout>
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/rcvArea"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/layoutInfoGarden"
       app:layout_constraintStart_toStartOf="parent"
       android:paddingBottom="40dp"
       android:layout_marginTop="10dp"/>
