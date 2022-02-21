@@ -130,8 +130,8 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
                     areaListViewModel.updateArea(areaForEdit);
                 } else {
                     //call view model
-//                    Area area = new Area(garden.getId(), name, position);
-//                    areaListViewModel.insertArea(area);
+                    Area area = new Area(garden.getId(), name, position, acreage);
+                    areaListViewModel.insertArea(area);
                 }
                 dialogBuilder.dismiss();
             }

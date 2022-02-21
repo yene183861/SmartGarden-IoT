@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +30,7 @@ public class AreaListViewModel extends ViewModel {
         areaList = new ArrayList<>();
     }
     public List<Area> getAreaList(String id){
-       // ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
-        //Area area = new Area(id);
-        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), id);
-       // Log.e("request", )
+        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), id);// Log.e("request", )
         call.enqueue(new Callback<List<Area>>() {
             @Override
             public void onResponse(Call<List<Area>> call, Response<List<Area>> response) {
@@ -58,11 +56,32 @@ public class AreaListViewModel extends ViewModel {
     }
 
     public void insertArea(Area area){
-        areaList.add(area);
-        areaListLiveData.setValue(areaList);
+        Call<Area> call = apiService.createArea(DataLocalManager.getTokenServer(), area);
+        call.enqueue(new Callback<Area>() {
+            @Override
+            public void onResponse(Call<Area> call, Response<Area> response) {
+                if (response.code() == 200) {
+                    areaList.add(area);
+                    areaListLiveData.setValue(areaList);
+                    Log.e("createArea", "insert success");
+                } else {
+                    try {
+                        Log.e("createArea", "error code: " + response.code() + "error body: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("createArea", "error: " + e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Area> call, Throwable t) {
+                Log.e("createArea", "onFailure" + t);
+            }
+        });
     }
     public void updateArea(Area area){
-        areaListLiveData.setValue(areaList);
+        //areaListLiveData.setValue(areaList);
 
     }
     public void deleteArea(Area area){
