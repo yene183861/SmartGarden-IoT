@@ -10,29 +10,33 @@ android:layout_margin="10dp">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
+    <LinearLayout
+        android:id="@+id/layoutValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
         <ImageView
-        android:id="@+id/img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/temper"/>
+            android:id="@+id/img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/temper"/>
         <TextView
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:layout_marginTop="10dp"
-           android:layout_below="@+id/img"
             android:textStyle="bold"
             android:textSize="20sp"
-            android:gravity="center"
             android:text="value"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/infoDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_toEndOf="@+id/img"
+        android:layout_toEndOf="@+id/layoutValue"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tvName"

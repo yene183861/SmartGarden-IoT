@@ -7,16 +7,28 @@ import java.io.Serializable;
 public class Area implements Serializable {
     @SerializedName("_id")
     private String id;
-    private String idGarden;
+    private String garden;
     private double acreage;
     private String name;
     private String position;
 
-    public Area(String idGarden, String name, String position, double acreage) {
-        this.idGarden = idGarden;
+    public Area(String garden, String name, String position, double acreage) {
+        this.garden = garden;
         this.name = name;
         this.position = position;
         this.acreage = acreage;
+    }
+
+    public Area(String id, String garden, double acreage, String name, String position) {
+        this.id = id;
+        this.garden = garden;
+        this.acreage = acreage;
+        this.name = name;
+        this.position = position;
+    }
+
+    public Area(String garden) {
+        this.garden = garden;
     }
 
     public double getAcreage() {
@@ -35,12 +47,12 @@ public class Area implements Serializable {
         this.id = id;
     }
 
-    public String getIdGarden() {
-        return idGarden;
+    public String getGarden() {
+        return garden;
     }
 
-    public void setIdGarden(String idGarden) {
-        this.idGarden = idGarden;
+    public void setGarden(String garden) {
+        this.garden = garden;
     }
 
     public String getName() {

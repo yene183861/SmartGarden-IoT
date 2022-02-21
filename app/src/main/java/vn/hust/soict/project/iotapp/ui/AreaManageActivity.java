@@ -42,21 +42,13 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         getSupportActionBar().setTitle("Manage Area");
 
         initUi();
-        Area area1 = new Area("idGarden", "Khu vuc 1", "ben trái cuosi vươn", 34.2);
-        Area area2 = new Area("idGarden", "Khu vuc 2", "ben phải cuosi vươn", 34.2);
-        Area area3 = new Area("idGarden", "Khu vuc 3", "ben trái cuosi vươn", 34.2);
-        Area area4 = new Area("idGarden", "Khu vuc 4", "ben trái cuosi vươn", 34.2);
-
-        areaList.add(area1);
-        areaList.add(area2);
-        areaList.add(area3);
-        areaList.add(area4);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvArea.setLayoutManager(linearLayoutManager);
         adapter = new AreaListAdapter(this, areaList, this);
         rcvArea.setAdapter(adapter);
         areaListViewModel = new ViewModelProvider(this).get(AreaListViewModel.class);
+        areaList = areaListViewModel.getAreaList(garden.getId());
         areaListViewModel.getAreaListObserver().observe(this, new Observer<List<Area>>() {
             @Override
             public void onChanged(List<Area> areas) {
@@ -72,7 +64,6 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
 
             }
         });
-//        areaListViewModel.getAreaList(garden.getId());
         btnAddNewArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +81,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         txtArea = findViewById(R.id.txtArea);
         txtGardenName.setText("Name garden: " + garden.getName());
         txtGardenAddress.setText("Address: " + garden.getAddress());
-        txtArea.setText("Area: " + String.valueOf(garden.getArea()));
+        //txtArea.setText("Area: " + String.valueOf(garden.getArea()));
         txtGardenAcreage.setText("Acreage:" + String.valueOf(garden.getAcreage()) + " (m2)");
     }
 

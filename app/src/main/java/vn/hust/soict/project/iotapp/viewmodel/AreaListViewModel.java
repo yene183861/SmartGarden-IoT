@@ -1,5 +1,7 @@
 package vn.hust.soict.project.iotapp.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,26 +22,35 @@ import vn.hust.soict.project.iotapp.model.Garden;
 public class AreaListViewModel extends ViewModel {
     private MutableLiveData<List<Area>> areaListLiveData;
     private List<Area> areaList;
+    ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
 
     public AreaListViewModel() {
         areaListLiveData = new MutableLiveData<>();
         areaList = new ArrayList<>();
-//        gardenListLiveData.setValue(gardenList);
     }
-    public void getAreaList(String id){
-        ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
-        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), id);
+    public List<Area> getAreaList(String id){
+       // ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
+        Area area = new Area(id);
+        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), area);
+       // Log.e("request", )
         call.enqueue(new Callback<List<Area>>() {
             @Override
             public void onResponse(Call<List<Area>> call, Response<List<Area>> response) {
-                areaListLiveData.postValue(response.body());
-            }
+                if(response.code() == 200) {
+                    areaList = response.body();
+                    areaListLiveData.setValue(areaList);
+                    Log.e("getArea", "success");
+                } else {
+                    Log.e("getArea", "failed: " + response.code() + " " + response.errorBody());
+                }}
 
             @Override
             public void onFailure(Call<List<Area>> call, Throwable t) {
-                areaListLiveData.postValue(null);
+                Log.e("getArea", "error: " + t);
+                areaList = null;
             }
         });
+        return areaList;
     }
 
     public MutableLiveData<List<Area>> getAreaListObserver() {

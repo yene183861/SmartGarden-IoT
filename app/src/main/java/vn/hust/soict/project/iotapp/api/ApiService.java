@@ -28,11 +28,14 @@ public interface ApiService {
     @POST("/login")
     Call<LoginResponse> login(@Body User user);
 
-    @GET("/getGardens")
+    @GET("/gardens")
     Call<List<Garden>> getGardenList(@Header("token") String token);
+@POST("/gardens/create")
+Call<Garden> createGarden(@Header("token") String token, @Body Garden garden);
+    //@POST(
 
-    @GET("/getArea")
-    Call<List<Area>> getAreaList(@Header("token") String token,@Query("id") String id);
+    @GET("/areas")
+    Call<List<Area>> getAreaList(@Header("token") String token,@Body Area area);
     @GET("/getDevice")
     Call<List<Device>> getDeviceList(@Header("token") String token,@Query("id") String id);
 }

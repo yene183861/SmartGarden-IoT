@@ -9,36 +9,21 @@ import java.util.List;
 public class Garden implements Serializable {
     @SerializedName("_id")
     private String id;
-    private String idUser;
     private String name;
     private String address;
-    private int area; //số khu vực
     private double acreage; //diện tích
 
-    public Garden(String id, String idUser, String name, String address, int area, double acreage) {
+    public Garden(String id, String idUser, String name, String address, double acreage) {
         this.id = id;
-        this.idUser = idUser;
         this.name = name;
         this.address = address;
-        this.area = area;
         this.acreage = acreage;
     }
 
-    public Garden(String idUser, String name, String address, int area, double acreage) {
-        this.idUser = idUser;
+    public Garden(String name, String address, double acreage) {
         this.name = name;
         this.address = address;
-        this.area = area;
         this.acreage = acreage;
-    }
-
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
     }
 
     public String getId() {
@@ -63,14 +48,6 @@ public class Garden implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public int getArea() {
-        return area;
-    }
-
-    public void setArea(int area) {
-        this.area = area;
     }
 
     public double getAcreage() {

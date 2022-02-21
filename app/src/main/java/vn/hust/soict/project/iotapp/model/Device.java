@@ -2,6 +2,8 @@ package vn.hust.soict.project.iotapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Device {
     @SerializedName("_id")
     private String id;
@@ -13,11 +15,11 @@ public class Device {
         2 cảm biến độ ẩm đất
         3 Cảm biến không khí
     */
-    private int value;
+    private double value;
     private boolean status;
+private Date time;
 
-
-    public Device(String idArea, String name, String position, int type,int value, boolean status) {
+    public Device(String idArea, String name, String position, int type,double value, boolean status) {
         this.idArea = idArea;
         this.name = name;
         this.position = position;
@@ -25,7 +27,7 @@ public class Device {
         this.status = status;
     }
 
-    public Device(String id, String idArea, String name, String position, int type, int value, boolean status) {
+    public Device(String id, String idArea, String name, String position, int type, double value, boolean status) {
         this.id = id;
         this.idArea = idArea;
         this.name = name;
@@ -75,11 +77,11 @@ public class Device {
         this.type = type;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

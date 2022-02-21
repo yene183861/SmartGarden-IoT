@@ -51,16 +51,14 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
         btnAddNewGarden = findViewById(R.id.btnAddNewGarden);
         rcvGarden = findViewById(R.id.rcvGarden);
         tvNoGardenList = findViewById(R.id.tvNoGardenList);
-        Garden garden1 = new Garden("DataLocalManager.getClientId()", "Vuon Dau Tay", "Mê Linh", 4, 129.4);
-        Garden garden2 = new Garden("DataLocalManager.getClientId()", "Vuon Nho", "Mê Linh", 4, 120);
-        gardenList.add(garden1);
-        gardenList.add(garden2);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvGarden.setLayoutManager(linearLayoutManager);
         adapter = new GardenListAdapter(this, gardenList, this);
         rcvGarden.setAdapter(adapter);
-
+        //gardenList = gardenListViewModel.getGardenList();
         gardenListViewModel = new ViewModelProvider(this).get(GardenListViewModel.class);
+        gardenList = gardenListViewModel.getGardenList();
         gardenListViewModel.getGardenListObserver().observe(this, new Observer<List<Garden>>() {
             @Override
             public void onChanged(List<Garden> gardens) {
@@ -70,14 +68,13 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
                 } else {
                     gardenList = gardens;
                     adapter.setGardenList(gardens);
-                    //rcvGarden.setAdapter(adapter);
                     tvNoGardenList.setVisibility(View.GONE);
                     rcvGarden.setVisibility(View.VISIBLE);
                 }
 
             }
         });
-        // gardenListViewModel.getGardenList();
+        //gardenList = gardenListViewModel.getGardenList();
         btnAddNewGarden.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +90,7 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
         EditText enterNameGarden = dialogView.findViewById(R.id.enterName);
         EditText enterAddressGarden = dialogView.findViewById(R.id.enterAddress);
         EditText enterAcreageGarden = dialogView.findViewById(R.id.enterAcreage);
-        EditText enterArea = dialogView.findViewById(R.id.enterArea);
+       // EditText enterArea = dialogView.findViewById(R.id.enterArea);
         TextView btnCreate = dialogView.findViewById(R.id.btnCreate);
         TextView btnCancel = dialogView.findViewById(R.id.btnCancel);
 
@@ -103,7 +100,6 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
             enterNameGarden.setText(gardenForEdit.getName());
             enterAddressGarden.setText(gardenForEdit.getAddress());
             enterAcreageGarden.setText(String.valueOf(gardenForEdit.getAcreage()));
-            enterArea.setText(String.valueOf(gardenForEdit.getArea()));
         }
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +113,7 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
             public void onClick(View v) {
                 String name = enterNameGarden.getText().toString().trim();
                 String addr = enterAddressGarden.getText().toString().trim();
-                int area = Integer.parseInt(enterArea.getText().toString().trim());
+                //int area = Integer.parseInt(enterArea.getText().toString().trim());
                 double acreage = Double.parseDouble(enterAcreageGarden.getText().toString().trim());
 
                 //check fields empty
@@ -126,13 +122,13 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
                     gardenForEdit.setName(name);
                     gardenForEdit.setAddress(addr);
                     gardenForEdit.setAcreage(acreage);
-                    gardenForEdit.setArea(area);
+                    //gardenForEdit.setArea(area);
                     gardenListViewModel.updateGarden(gardenForEdit.getId(), gardenForEdit);
                 } else {
                     //call view model
-                    Garden garden = new Garden("DataLocalManager.getClientId()", name, addr, area, acreage);
-                    gardenList.add(garden);
-                    adapter.setGardenList(gardenList);
+                    Garden garden = new Garden(name, addr, acreage);
+//                    gardenList.add(garden);
+//                    adapter.setGardenList(gardenList);
                     gardenListViewModel.insertGarden(garden);
                 }
                 dialogBuilder.dismiss();

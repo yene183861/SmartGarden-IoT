@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -76,12 +77,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
+    MyAsync myAsync;
     private Handler handler;
     String topic = "iot-nhom8-20211/#";
-    public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/dht11/temperature";
-    public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/dht11/humidity";
-    public static final String LAMP_TOPIC = "iot-nhom8-20211/lamp";
-    public static final String SOILMOIST_TOPIC = "iot-nhom8-20211/soil";
+    public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/temperature";
+    public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/humidity";
+    public static final String LAMP_TOPIC = "iot-nhom8-20211/garden1/area1/lamp";
+    public static final String SOILMOIST_TOPIC = "iot-nhom8-20211/garden1/area1/soil";
     private Area area;
 
     @Override
@@ -91,12 +93,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
         initUi();
+        createThread();
         connectMQTT();
-        initHandler();
+        //initHandler();
 
-        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 0, true);
-        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 0, true);
-        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 3, 0, true);
+        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 67.1, true);
+        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 12.34, true);
+        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 3, 6.4, true);
         deviceList.add(device);
         deviceList.add(device1);
         deviceList.add(device3);
@@ -144,18 +147,18 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         txtAcreage.setText("Acreage: " + String.valueOf(area.getAcreage()) + " (m2)");
     }
 
-    private void initHandler() {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                switch (msg.what) {
-                    case MSG_GET_DEVICES:
-                        deviceList = null;
-                }
-                super.handleMessage(msg);
-            }
-        };
-    }
+//    private void initHandler() {
+//        handler = new Handler() {
+//            @Override
+//            public void handleMessage(@NonNull Message msg) {
+//                switch (msg.what) {
+//                    case MSG_GET_DEVICES:
+//                        deviceList = null;
+//                }
+//                super.handleMessage(msg);
+//            }
+//        };
+//    }
 
     private void initListener() {
         btnAddNewDevice.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +203,10 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     @Override
     protected void onDestroy() {
         disconnectMQTT();
+        myAsync.onCancelled();
         Log.e("onDestroy", "onDestroy");
+        Log.e("myAsync", "onCancelled");
+
         super.onDestroy();
     }
 
@@ -335,32 +341,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
                         Log.d("subscribe", "topic>>" + topic);
-//                        String json = new String(message.getPayload());
-//                        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-
-                        //Device device = gson.fromJson(jsonObject.toString(), Device.class);
-//                        int n = deviceList.size();
-//
-////                        if (device instanceof Device) {
-//                            for (int i = 0; i < n; i++) {
-//                                int type = deviceList.get(i).getType();
-//                                if (type == 1) {
-//                                    Log.e("test: ", "TEMPERATURE_TOPIC " + topicName.compareTo(TEMPERATURE_TOPIC) + "type" + type);
-//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("temperature"))));
-//                                } else if (type == 2) {
-//                                    Log.e("test: ", "HUMIDITY_TOPIC " + topicName.compareTo(HUMIDITY_TOPIC) + "type" + type);
-//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("humidity"))));
-//                                } else {
-//                                    Log.e("test: ", " WATER_TOPIC" + topicName.compareTo(SOILMOIST_TOPIC) + "type" + type);
-//                                    deviceList.get(i).setValue(Integer.parseInt(String.valueOf(jsonObject.get("soil"))));
-//                                }
-//                            }
-//                            adapter.setDeviceList(deviceList);
-//                            rcvDevice.setAdapter(adapter);
-//                        }
-//                        else {
-//                            Log.e("mess receive: ", "error");
-//                        }
+                        Log.e("mess rev: ", new String(message.getPayload()));
                     }
 
                     @Override
@@ -409,8 +390,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 }
                 Gson gson = new Gson();
                 String json = gson.toJson(inputMap);
-                Log.e("mss", json);
-                //String json = gson.toJson(device);
+                //Log.e("mss", json);
                 MqttMessage message = new MqttMessage(json.getBytes("UTF-8"));
                 client.publish(topic, message);
             } catch (UnsupportedEncodingException | MqttException e) {
@@ -421,94 +401,51 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         }
     }
 
+    //
     private void createThread() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int time = 10;
-                do {
-                    time--;
-                    Message msg = new Message();
-                    msg.what = MSG_GET_DEVICES;
-                    msg.arg1 = time;
-//                    handler.sendMessage(msg);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } while (time > 0);
+        myAsync = new MyAsync();
+        myAsync.execute(deviceListViewModel);
+    }
+
+    private class MyAsync extends AsyncTask<DeviceListViewModel, List<Device>, Void> {
+        private List<Device> mList;
+        private String idArea;
+
+        @Override
+        protected void onPreExecute() {
+            mList = new ArrayList<>();
+            idArea = area.getId();
+            //super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(DeviceListViewModel... deviceListViewModels) {
+            while (true) {
+                mList = deviceListViewModels[0].getDeviceList(idArea);
+                publishProgress(mList);
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        });
-        thread.start();
+        }
+
+        @Override
+        protected void onProgressUpdate(List<Device>... values) {
+            deviceList = values[0];
+            adapter.setDeviceList(deviceList);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
     }
 
 }
-//    private Messenger messenger = null;
-//    private boolean isServiceConnected;
-//    private ServiceConnection serviceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            messenger = new Messenger(service);
-//            isServiceConnected = true;
-//            //send message connect mqtt
-//            sendMessageConnectMQTT();
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            messenger = null;
-//            isServiceConnected = false;
-//        }
-//    };
-
-//    private void sendMessageConnectMQTT() {
-//        Message message = Message.obtain(null, MyService.MSG_CONNECT_MQTT, 0, 0);
-//        try {
-//            messenger.send(message);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        Log.e("onStart", "onStart");
-//        //bind to the service
-//        bindService(new Intent(this, MyService.class),serviceConnection, Context.BIND_AUTO_CREATE);
-//    }
-//    @Override
-//    protected void onDestroy() {
-//        if (isServiceConnected) {
-//            unbindService(serviceConnection);
-//            isServiceConnected = false;
-//        }
-//        super.onDestroy();
-//    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if(isServiceConnected){
-//            unbindService(serviceConnection);
-//            isServiceConnected = false;
-//        }
-//    }
-//        Intent serviceIntent = new Intent(context, ServedService.class);
-//        context.startService(serviceIntent);
-//        context.bindService(serviceIntent, new ServiceConnection() {
-//            @Override
-//            public void onServiceConnected(ComponentName name, IBinder service) {
-//                //retrieve an instance of the service here from the IBinder returned
-//                //from the onBind method to communicate with
-//            }
-//
-//            @Override
-//            public void onServiceDisconnected(ComponentName name) {
-//            }
-//        }, Context.BIND_AUTO_CREATE);
 
 
 

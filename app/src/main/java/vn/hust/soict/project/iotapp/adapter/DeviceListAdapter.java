@@ -44,7 +44,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvName.setText("Name: " + this.deviceList.get(position).getName());
-        holder.value.setText(""+this.deviceList.get(position).getValue());
+        holder.value.setText(String.valueOf(this.deviceList.get(position).getValue()) + "%");
         holder.tvPosition.setText("Position: " + this.deviceList.get(position).getPosition());
         int type = this.deviceList.get(position).getType();
         int imgCode;
