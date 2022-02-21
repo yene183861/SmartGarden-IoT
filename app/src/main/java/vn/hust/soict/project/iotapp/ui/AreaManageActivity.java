@@ -78,7 +78,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         txtGardenName = findViewById(R.id.txtGardenName);
         txtGardenAddress = findViewById(R.id.txtGardenAddress);
         txtGardenAcreage = findViewById(R.id.txtGardenAcreage);
-        txtArea = findViewById(R.id.txtArea);
+        //txtArea = findViewById(R.id.txtArea);
         txtGardenName.setText("Name garden: " + garden.getName());
         txtGardenAddress.setText("Address: " + garden.getAddress());
         //txtArea.setText("Area: " + String.valueOf(garden.getArea()));
@@ -95,8 +95,8 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         EditText enterAcreage = dialogView.findViewById(R.id.enterAcreage);
         TextView btnCreateArea = dialogView.findViewById(R.id.btnCreate);
         TextView btnCancelArea = dialogView.findViewById(R.id.btnCancel);
-        TextView enterArea = dialogView.findViewById(R.id.enterArea);
-        enterArea.setVisibility(View.GONE);
+        //TextView enterArea = dialogView.findViewById(R.id.enterArea);
+        //enterArea.setVisibility(View.GONE);
 
 
         if (isEdit) {

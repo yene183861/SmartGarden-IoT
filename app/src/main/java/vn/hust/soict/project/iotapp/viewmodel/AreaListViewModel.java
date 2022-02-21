@@ -30,8 +30,8 @@ public class AreaListViewModel extends ViewModel {
     }
     public List<Area> getAreaList(String id){
        // ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
-        Area area = new Area(id);
-        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), area);
+        //Area area = new Area(id);
+        Call<List<Area>> call = apiService.getAreaList(DataLocalManager.getTokenServer(), id);
        // Log.e("request", )
         call.enqueue(new Callback<List<Area>>() {
             @Override

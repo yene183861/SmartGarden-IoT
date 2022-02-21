@@ -24,11 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Address: "/>
-    <TextView
-        android:id="@+id/txtArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Area: "/>
 
     <TextView
         android:id="@+id/txtGardenAcreage"

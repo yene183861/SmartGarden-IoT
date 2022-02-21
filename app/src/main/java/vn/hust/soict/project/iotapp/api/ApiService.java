@@ -35,7 +35,7 @@ Call<Garden> createGarden(@Header("token") String token, @Body Garden garden);
     //@POST(
 
     @GET("/areas")
-    Call<List<Area>> getAreaList(@Header("token") String token,@Body Area area);
+    Call<List<Area>> getAreaList(@Header("token") String token,@Query("gardenId") String id);
     @GET("/getDevice")
     Call<List<Device>> getDeviceList(@Header("token") String token,@Query("id") String id);
 }

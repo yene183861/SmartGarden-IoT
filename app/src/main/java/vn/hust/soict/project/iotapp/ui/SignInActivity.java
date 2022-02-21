@@ -71,7 +71,6 @@ public class SignInActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             User user = response.body().getUser();
                             DataLocalManager.setTokenServer(response.body().getToken());
-                            DataLocalManager.setClientId(user.getId());
                             Intent intent = new Intent(SignInActivity.this, GardenManageActivity.class);
                             startActivity(intent);
                             finishAffinity();

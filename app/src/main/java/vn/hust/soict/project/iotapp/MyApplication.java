@@ -1,11 +1,12 @@
 package vn.hust.soict.project.iotapp;
-        import android.app.Application;
 
-        import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
+import android.app.Application;
+
+import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
 
 
 public class MyApplication extends Application {
-        @Override
+    @Override
     public void onCreate() {
         super.onCreate();
         DataLocalManager.init(getApplicationContext());

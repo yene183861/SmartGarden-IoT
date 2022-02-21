@@ -27,10 +27,6 @@ public class Area implements Serializable {
         this.position = position;
     }
 
-    public Area(String garden) {
-        this.garden = garden;
-    }
-
     public double getAcreage() {
         return acreage;
     }
