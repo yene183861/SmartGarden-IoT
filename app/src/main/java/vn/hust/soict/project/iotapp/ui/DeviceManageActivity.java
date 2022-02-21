@@ -97,12 +97,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         connectMQTT();
         //initHandler();
 
-        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 67.1, true);
-        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 12.34, true);
-        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 3, 6.4, true);
-        deviceList.add(device);
-        deviceList.add(device1);
-        deviceList.add(device3);
+//        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 67.1, true);
+//        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 12.34, true);
+//        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 3, 6.4, true);
+//        deviceList.add(device);
+//        deviceList.add(device1);
+//        deviceList.add(device3);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvDevice.setLayoutManager(linearLayoutManager);
         adapter = new DeviceListAdapter(this, deviceList, (DeviceListAdapter.ItemClickListener) this);
@@ -432,7 +432,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 if (isCancelled())
                     break;
                 try {
-                    Thread.sleep(60000);
+                    Thread.sleep(120000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

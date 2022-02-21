@@ -2,6 +2,7 @@ package vn.hust.soict.project.iotapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,9 +96,13 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         EditText enterAcreage = dialogView.findViewById(R.id.enterAcreage);
         TextView btnCreateArea = dialogView.findViewById(R.id.btnCreate);
         TextView btnCancelArea = dialogView.findViewById(R.id.btnCancel);
+        TextView txtViewName = dialogView.findViewById(R.id.txtViewName);
+        TextView txtViewPosition = dialogView.findViewById(R.id.txtViewPosition);
         //TextView enterArea = dialogView.findViewById(R.id.enterArea);
         //enterArea.setVisibility(View.GONE);
-
+        addAreaTitleDialog.setText("Add New Area");
+        txtViewName.setText("Name area: ");
+        txtViewPosition.setText("Position: ");
 
         if (isEdit) {
             addAreaTitleDialog.setText("Update information area");
@@ -130,6 +135,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
                     areaListViewModel.updateArea(areaForEdit);
                 } else {
                     //call view model
+                    Log.e("id",garden.getId());
                     Area area = new Area(garden.getId(), name, position, acreage);
                     areaListViewModel.insertArea(area);
                 }

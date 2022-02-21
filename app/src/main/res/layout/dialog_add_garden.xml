@@ -23,6 +23,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/txtViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name garden:" />
@@ -43,6 +44,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/txtViewPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Address:" />

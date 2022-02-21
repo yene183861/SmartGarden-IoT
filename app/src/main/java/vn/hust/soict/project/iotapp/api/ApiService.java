@@ -41,7 +41,8 @@ public interface ApiService {
     @POST("/areas/create")
     Call<Area> createArea(@Header("token") String token, @Body Area area);
 
-
     @GET("/devices")
     Call<List<Device>> getDeviceList(@Header("token") String token, @Query("areaId") String id);
+    @POST("/devices/create")
+    Call<Device> createDevices(@Header("token") String token, @Body Device device);
 }
