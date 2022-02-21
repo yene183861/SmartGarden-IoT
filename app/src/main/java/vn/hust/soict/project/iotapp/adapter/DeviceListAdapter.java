@@ -47,7 +47,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         holder.value.setText(String.valueOf(this.deviceList.get(position).getValue()) + "%");
         holder.tvPosition.setText("Position: " + this.deviceList.get(position).getPosition());
         int type = this.deviceList.get(position).getType();
-        int imgCode;
+        int imgCode = R.drawable.temper;
         boolean status = this.deviceList.get(position).isStatus();
         if (status) {
             holder.tvStatus.setText("Status: On");
@@ -60,7 +60,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             case 2: //2 đo độ ẩm đất
                 imgCode = R.drawable.soil_moisture;
                 break;
-            default: // 3 do am khong khi
+            case 3: // 3 do am khong khi
                 imgCode = R.drawable.air_humidity;
                 break;
         }

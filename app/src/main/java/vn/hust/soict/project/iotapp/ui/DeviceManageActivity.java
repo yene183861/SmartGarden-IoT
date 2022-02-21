@@ -429,12 +429,15 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             while (true) {
                 mList = deviceListViewModels[0].getDeviceList(idArea);
                 publishProgress(mList);
+                if (isCancelled())
+                    break;
                 try {
                     Thread.sleep(60000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+            return null;
         }
 
         @Override
