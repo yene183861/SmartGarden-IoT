@@ -60,11 +60,9 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             case 2: //2 đo độ ẩm đất
                 imgCode = R.drawable.soil_moisture;
                 break;
-            case 3: // 3 do am khong khi
+            default: // 3 do am khong khi
                 imgCode = R.drawable.air_humidity;
                 break;
-            default: //4 la den
-                imgCode = R.drawable.brightness;
         }
         holder.img.setImageResource(imgCode);
 

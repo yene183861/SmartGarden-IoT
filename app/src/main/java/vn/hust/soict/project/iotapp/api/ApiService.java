@@ -30,12 +30,18 @@ public interface ApiService {
 
     @GET("/gardens")
     Call<List<Garden>> getGardenList(@Header("token") String token);
-@POST("/gardens/create")
-Call<Garden> createGarden(@Header("token") String token, @Body Garden garden);
-    //@POST(
+
+    @POST("/gardens/create")
+    Call<Garden> createGarden(@Header("token") String token, @Body Garden garden);
+
 
     @GET("/areas")
-    Call<List<Area>> getAreaList(@Header("token") String token,@Query("gardenId") String id);
-    @GET("/getDevice")
-    Call<List<Device>> getDeviceList(@Header("token") String token,@Query("id") String id);
+    Call<List<Area>> getAreaList(@Header("token") String token, @Query("gardenId") String id);
+
+    @POST("/areas/create")
+    Call<Area> createArea(@Header("token") String token, @Body Area area);
+
+
+    @GET("/devices")
+    Call<List<Device>> getDeviceList(@Header("token") String token, @Query("areaId") String id);
 }

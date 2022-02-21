@@ -88,12 +88,19 @@
             android:text="Soil Moisture Sensor" />
 
         <RadioButton
-            android:id="@+id/radioButtonAirHumidity"
+            android:id="@+id/radioButtonLamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Air Humidity Sensor"
+            android:text="Lamp"
             android:textSize="14sp" />
+      <RadioButton
+          android:id="@+id/radioButtonPump"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="Pump"
+          android:textSize="14sp" />
     </RadioGroup>
   </LinearLayout>
 

@@ -221,7 +221,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         RadioGroup radioGroupDeviceType = dialogView.findViewById(R.id.radioGroupDeviceType);
         RadioButton radioButtonTemperature = dialogView.findViewById(R.id.radioButtonTemperature);
         RadioButton radioButtonSoilMoisture = dialogView.findViewById(R.id.radioButtonSoilMoisture);
-        RadioButton radioButtonAirHumidity = dialogView.findViewById(R.id.radioButtonAirHumidity);
+        RadioButton radioButtonLamp = dialogView.findViewById(R.id.radioButtonLamp);
+        RadioButton radioButtonPump = dialogView.findViewById(R.id.radioButtonPump);
 
         if (isEdit) {
             addDeviceTitleDialog.setText("Update information device");
@@ -236,8 +237,11 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     radioGroupDeviceType.check(R.id.radioButtonSoilMoisture);
                     break;
                 case 3:
-                    radioGroupDeviceType.check(R.id.radioButtonAirHumidity);
+                    radioGroupDeviceType.check(R.id.radioButtonLamp);
                     break;
+                default:
+                    radioGroupDeviceType.check(R.id.radioButtonPump);
+
             }
         }
 
@@ -261,9 +265,11 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 } else if (type == R.id.radioButtonSoilMoisture) {
                     Log.e("radioButtonSoilMoisture", " " + R.id.radioButtonSoilMoisture);
                     type = 2;
-                } else {
-                    Log.e("radioButtonAirHumidity", " " + R.id.radioButtonAirHumidity);
+                } else if (type == R.id.radioButtonLamp){
+                    Log.e("radioButtonLamp", " " + R.id.radioButtonLamp);
                     type = 3;
+                } else {
+                    type = 4;
                 }
 
                 //check fields empty
