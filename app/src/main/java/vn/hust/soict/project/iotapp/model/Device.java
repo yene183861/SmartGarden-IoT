@@ -26,6 +26,13 @@ private Date time;
         this.type = type;
         this.status = status;
     }
+    public Device(String idArea, String name, String position, int type, boolean status) {
+        this.idArea = idArea;
+        this.name = name;
+        this.position = position;
+        this.type = type;
+        this.status = status;
+    }
 
     public Device(String id, String idArea, String name, String position, int type, double value, boolean status) {
         this.id = id;

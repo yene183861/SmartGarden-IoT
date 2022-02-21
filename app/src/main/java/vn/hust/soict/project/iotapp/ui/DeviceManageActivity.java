@@ -68,16 +68,17 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     private ImageView btnAddNewDevice, imgLamp, imgWatering;
     private TextView tvNoDeviceList, txtAreaName, txtAreaPosition, txtAcreage;
     private RecyclerView rcvDevice;
-    private LinearLayout layoutControl;
+    private LinearLayout layoutControl, layoutLamp, layoutPump;
     private Switch controlLamp, controlWatering;
     private DeviceListViewModel deviceListViewModel;
     private List<Device> deviceList = new ArrayList<>();
+    private List<Device> deviceList1 = new ArrayList<>();
     private DeviceListAdapter adapter;
     private Device deviceForEdit;
     public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
-    MyAsync myAsync;
+    //MyAsync myAsync;
     private Handler handler;
     String topic = "iot-nhom8-20211/#";
     public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/temperature";
@@ -93,7 +94,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
         initUi();
-        createThread();
+        //createThread();
         connectMQTT();
         //initHandler();
 
@@ -105,11 +106,26 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 //        deviceList.add(device3);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvDevice.setLayoutManager(linearLayoutManager);
-        adapter = new DeviceListAdapter(this, deviceList, (DeviceListAdapter.ItemClickListener) this);
+        deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
+        deviceList = deviceListViewModel.getDeviceList(area.getId());
+        int size = deviceList.size();
+        boolean isHaveLamp = false;
+        boolean isHavePump = false;
+        for(int i = 0; i < size; i++){
+            if(deviceList.get(i).getType() < 4){
+                deviceList1.add(deviceList.get(i));
+            } else if(deviceList.get(i).getType() == 4){
+                isHaveLamp = true;
+            } else {
+                isHavePump = true;
+            }
+        }
+        adapter = new DeviceListAdapter(this, deviceList1, (DeviceListAdapter.ItemClickListener) this);
         //deviceListViewModel.getDeviceList(area.getId());
         adapter.setDeviceList(deviceList);
         rcvDevice.setAdapter(adapter);
-        deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
+//        deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
+//        deviceList = deviceListViewModel.getDeviceList(area.getId());
         deviceListViewModel.getDeviceListObserver().observe(this, new Observer<List<Device>>() {
             @Override
             public void onChanged(List<Device> devices) {
@@ -135,6 +151,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         rcvDevice = findViewById(R.id.rcvDevice);
         tvNoDeviceList = findViewById(R.id.tvNoDeviceList);
         layoutControl = findViewById(R.id.layoutControl);
+        layoutLamp = findViewById(R.id.layoutLamp);
+        layoutPump = findViewById(R.id.layoutPump);
         controlLamp = (Switch) findViewById(R.id.controlLamp);
         controlWatering = (Switch) findViewById(R.id.controlWatering);
         imgLamp = findViewById(R.id.imgLamp);
@@ -203,7 +221,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     @Override
     protected void onDestroy() {
         disconnectMQTT();
-        myAsync.onCancelled();
+        //myAsync.onCancelled();
         Log.e("onDestroy", "onDestroy");
         Log.e("myAsync", "onCancelled");
 
@@ -282,7 +300,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     deviceListViewModel.updateDevice(deviceForEdit);
                 } else {
                     //call view model
-                    Device device = new Device(area.getId(), name, position, type, 0, false);
+                    Device device = new Device(area.getId(), name, position, type, false);
                     deviceListViewModel.insertDevice(device);
                 }
                 dialogBuilder.dismiss();
@@ -408,49 +426,49 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     }
 
     //
-    private void createThread() {
-        myAsync = new MyAsync();
-        myAsync.execute(deviceListViewModel);
-    }
-
-    private class MyAsync extends AsyncTask<DeviceListViewModel, List<Device>, Void> {
-        private List<Device> mList;
-        private String idArea;
-
-        @Override
-        protected void onPreExecute() {
-            mList = new ArrayList<>();
-            idArea = area.getId();
-            //super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(DeviceListViewModel... deviceListViewModels) {
-            while (true) {
-                mList = deviceListViewModels[0].getDeviceList(idArea);
-                publishProgress(mList);
-                if (isCancelled())
-                    break;
-                try {
-                    Thread.sleep(120000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(List<Device>... values) {
-            deviceList = values[0];
-            adapter.setDeviceList(deviceList);
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-    }
+//    private void createThread() {
+//        myAsync = new MyAsync();
+//        myAsync.execute(deviceListViewModel);
+//    }
+//
+//    private class MyAsync extends AsyncTask<DeviceListViewModel, List<Device>, Void> {
+//        private List<Device> mList;
+//        private String idArea;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            mList = new ArrayList<>();
+//            idArea = area.getId();
+//            //super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(DeviceListViewModel... deviceListViewModels) {
+//            while (true) {
+//                mList = deviceListViewModels[0].getDeviceList(idArea);
+//                publishProgress(mList);
+//                if (isCancelled())
+//                    break;
+//                try {
+//                    Thread.sleep(120000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(List<Device>... values) {
+//            deviceList = values[0];
+//            adapter.setDeviceList(deviceList);
+//        }
+//
+//        @Override
+//        protected void onCancelled() {
+//            super.onCancelled();
+//        }
+//    }
 
 }
 

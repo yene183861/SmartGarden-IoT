@@ -148,6 +148,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
 
     @Override
     public void onAreaClick(Area area) {
+        Log.e("onAreaClick", "onAreaClick");
         Intent intent = new Intent(AreaManageActivity.this, DeviceManageActivity.class);
         intent.putExtra("area", area);
         startActivity(intent);
