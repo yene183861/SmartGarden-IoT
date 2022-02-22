@@ -20,6 +20,9 @@
         android:theme="@style/Theme.IoTApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.AutomationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.BindActivity"
             android:exported="false" />
         <activity
