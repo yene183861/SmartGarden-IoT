@@ -4,14 +4,10 @@ import static vn.hust.soict.project.iotapp.R.color.red;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +17,6 @@ import java.util.List;
 
 import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.model.Device;
-import vn.hust.soict.project.iotapp.ui.BindDeviceActivity;
-import vn.hust.soict.project.iotapp.ui.DeviceManageActivity;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder> {
     private Context context;

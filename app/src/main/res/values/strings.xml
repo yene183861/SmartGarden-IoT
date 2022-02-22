@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">IoTApp</string>
+    <string name="bind_device_title">Device pairing</string>
 </resources>

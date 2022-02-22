@@ -66,7 +66,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
-    String topic = "iot-nhom8-20211/garden1/area1/#";
+    String topic = "iot-nhom8-20211/garden1/area1";
     public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/temperature";
     public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/humidity";
     public static final String LAMP_TOPIC = "iot-nhom8-20211/garden1/area1/lamp";
@@ -214,6 +214,18 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 publish(1, type, LAMP_TOPIC);
             }
         });
+        layoutLamp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bindDevice();
+            }
+        });
+        layoutPump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bindDevice();
+            }
+        });
     }
 
 
@@ -226,7 +238,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 
         super.onDestroy();
     }
-
+private void bindDevice(){
+    AlertDialog dialogBuilder = new AlertDialog.Builder(DeviceManageActivity.this).create();
+    View dialogView = getLayoutInflater().inflate(R.layout.dialog_bind_device, null);
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.show();
+}
     private void showAddDialog(boolean isEdit) {
         AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_device, null);
@@ -314,8 +331,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 
     @Override
     public void onDeviceClick(Device device) {
-        Intent intent = new Intent(DeviceManageActivity.this, BindDeviceActivity.class);
-        startActivity(intent);
+        //bindDevice(device);
     }
 
     @Override
@@ -377,13 +393,14 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                         String json = new String(message.getPayload());
                         Gson gson = new Gson(); // khởi tạo Gson
                         DataReceive dataReceive = gson.fromJson(json, DataReceive.class);
-
+Log.e("mmesssss", String.valueOf(dataReceive.getTemperature()));
                         //DataReceive dataReceive = JSONObject.;
 //                        Log.e("message", dataReceive.getDate().toString());
 //                        Log.e("message", dataReceive.getTime().toString());
 //                        Log.e("message", String.valueOf(dataReceive.getTemperature()));
 //                        Log.e("message", String.valueOf(dataReceive.getHumidity_soil()));
 //                        Log.e("message", String.valueOf(dataReceive.getHumidity_air()));
+                        //deviceList1.clear();
                         int size = deviceList1.size();
                         for(int i = 0; i < size; i++){
                             int type = deviceList1.get(i).getType();
@@ -392,12 +409,14 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                                 deviceList1.get(i).setValue(dataReceive.getTemperature());
                             } else if(type == 2){
                                 Log.e("Humidity_air", "dataReceive.getHumidity_air()");
-                                deviceList1.get(i).setValue(dataReceive.getHumidity_air());
+                                deviceList1.get(i).setValue(dataReceive.getHumidity());
                             } else {
                                 Log.e("getHumidity_soil", "dataReceive.getHumidity_air()");
-                                deviceList1.get(i).setValue(dataReceive.getHumidity_soil());
+                                deviceList1.get(i).setValue(dataReceive.getSoil());
                             }
                         }
+                        adapter.setDeviceList(deviceList1);
+                        rcvDevice.setAdapter(adapter);
                     }
 
                     @Override
