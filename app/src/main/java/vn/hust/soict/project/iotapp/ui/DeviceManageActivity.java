@@ -274,7 +274,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         TextView tvNameDevice = dialogView.findViewById(R.id.tv_name_device);
         TextView tvAreaDevice = dialogView.findViewById(R.id.tv_area_device);
         TextView tvNameRealDevice = dialogView.findViewById(R.id.tv_name_realdevice);
-        ScrollView scrollView = dialogView.findViewById(R.id.scrollView);
+        RecyclerView rcvRealDevice = dialogView.findViewById(R.id.rcvRealDevice);
         Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
         Button btnSave = dialogView.findViewById(R.id.btn_save);
         tvNameDevice.setText(device.getName());
@@ -386,7 +386,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     Device device = new Device(area.getId(), name, area.getPosition(), type, false);
                     deviceListViewModel.insertDevice(device);
                     if (type == 1) {
-                        Device device1 = new Device(area.getId(), name, area.getPosition(), 5, false);
+                        Device device1 = new Device(area.getId(), "Độ ẩm không khí", area.getPosition(), 5, false);
                         deviceListViewModel.insertDevice(device1);
                     }
                 }

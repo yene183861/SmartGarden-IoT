@@ -107,6 +107,7 @@
                 android:layout_below="@id/tv_listdevices"
                 android:layout_centerHorizontal="true">
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcvRealDevice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
