@@ -74,7 +74,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_manage);
         getSupportActionBar().setTitle("Manage Device");
-        area = (Area) getIntent().getSerializableExtra("area");
+        area = (Area)getIntent().getSerializableExtra("area");
         initUi();
         //createThread();
         connectMQTT();

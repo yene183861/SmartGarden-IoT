@@ -62,11 +62,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_title"
-                android:layout_marginStart="26dp"
-                android:layout_toLeftOf="@id/linear_real_device"
-                android:layout_marginTop="40dp"
+                android:layout_toStartOf="@id/linear_real_device"
                 android:layout_toEndOf="@id/linear_virtual_device"
-                android:background="@drawable/ic_baseline_compare_arrows_24" />
+                android:layout_alignBottom="@id/linear_virtual_device"
+                android:src="@drawable/ic_baseline_compare_arrows_24" />
 
             <LinearLayout
                 android:id="@+id/linear_real_device"
@@ -108,10 +107,10 @@
                 android:layout_height="100dp"
                 android:layout_below="@id/tv_listdevices"
                 android:layout_centerHorizontal="true">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
             </ScrollView>
 
             <LinearLayout
