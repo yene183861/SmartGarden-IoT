@@ -28,25 +28,25 @@ public class DeviceListViewModel extends ViewModel {
     public DeviceListViewModel() {
         deviceListLiveData = new MutableLiveData<>();
         deviceList = new ArrayList<>();
-//        gardenListLiveData.setValue(gardenList);
     }
-    public List<Device> getDeviceList(String id){
-        //ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
+
+    public List<Device> getDeviceList(String id) {
         Call<List<Device>> call = apiService.getDeviceList(DataLocalManager.getTokenServer(), id);// Log.e("request", )
         call.enqueue(new Callback<List<Device>>() {
             @Override
             public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     deviceList = response.body();
                     deviceListLiveData.setValue(deviceList);
-                    Log.e("getArea", "success");
+                    Log.e("getDevice", "success");
                 } else {
-                    Log.e("getArea", "failed: " + response.code() + " " + response.errorBody());
-                }}
+                    Log.e("getDevice", "failed: " + response.code() + " " + response.errorBody());
+                }
+            }
 
             @Override
             public void onFailure(Call<List<Device>> call, Throwable t) {
-                Log.e("getArea", "error: " + t);
+                Log.e("getDevice", "error: " + t);
                 deviceList = null;
             }
         });
@@ -57,36 +57,40 @@ public class DeviceListViewModel extends ViewModel {
         return deviceListLiveData;
     }
 
-    public void insertDevice(Device device){
+    public void insertDevice(Device device) {
         Call<Device> call = apiService.createDevice(DataLocalManager.getTokenServer(), device);
         call.enqueue(new Callback<Device>() {
             @Override
             public void onResponse(Call<Device> call, Response<Device> response) {
                 if (response.code() == 200) {
-                    deviceList.add(device);
+                    Log.e("createDevice", "success");
+                    if (device.getType() == 2 || device.getType() == 1 || device.getType() == 5) {
+                        deviceList.add(device);
+                    }
                     deviceListLiveData.setValue(deviceList);
-                    Log.e("createArea", "insert success");
                 } else {
                     try {
-                        Log.e("createArea", "error code: " + response.code() + "error body: " + response.errorBody().string());
+                        Log.e("createDevice", "error code: " + response.code() + "error body: " + response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Log.e("createArea", "error: " + e);
+                        Log.e("createDevice", "error: " + e);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<Device> call, Throwable t) {
-                Log.e("createArea", "onFailure" + t);
+                Log.e("createDevice", "onFailure" + t);
             }
         });
     }
-    public void updateDevice(Device device){
+
+    public void updateDevice(Device device) {
         deviceListLiveData.setValue(deviceList);
 
     }
-    public void deleteDevice(Device device){
+
+    public void deleteDevice(Device device) {
 
     }
 }

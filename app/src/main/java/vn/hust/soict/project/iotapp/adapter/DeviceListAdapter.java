@@ -1,7 +1,11 @@
 package vn.hust.soict.project.iotapp.adapter;
 
+import static vn.hust.soict.project.iotapp.R.color.red;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,8 @@ import java.util.List;
 
 import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.model.Device;
+import vn.hust.soict.project.iotapp.ui.BindDeviceActivity;
+import vn.hust.soict.project.iotapp.ui.DeviceManageActivity;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder> {
     private Context context;
@@ -41,18 +47,28 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         return new DeviceViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvName.setText("Name: " + this.deviceList.get(position).getName());
-        holder.value.setText(String.valueOf(this.deviceList.get(position).getValue()) + "%");
+        holder.value.setText("" + String.valueOf(this.deviceList.get(position).getValue()) + "%");
         holder.tvPosition.setText("Position: " + this.deviceList.get(position).getPosition());
         int type = this.deviceList.get(position).getType();
         int imgCode = R.drawable.temper;
         boolean status = this.deviceList.get(position).isStatus();
         if (status) {
             holder.tvStatus.setText("Status: On");
-        } else
+        } else{
             holder.tvStatus.setText("Status: Off");
+            holder.tvStatus.setTextColor(red);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Log.e("getClass().getSimpleName()", getClass().getSimpleName());
+//                    Intent intent = new Intent(super.getClass()., BindDeviceActivity.class);
+                }
+            });
+        }
         switch (type) {
             case 1:
                 imgCode = R.drawable.temper;
@@ -60,7 +76,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             case 2: //2 đo độ ẩm đất
                 imgCode = R.drawable.soil_moisture;
                 break;
-            case 3: // 3 do am khong khi
+            case 5: // 6 do am khong khi
                 imgCode = R.drawable.air_humidity;
                 break;
         }

@@ -43,6 +43,7 @@ public interface ApiService {
 
     @GET("/devices")
     Call<List<Device>> getDeviceList(@Header("token") String token, @Query("areaId") String id);
+
     @POST("/devices/create")
     Call<Device> createDevice(@Header("token") String token, @Body Device device);
 }
