@@ -20,9 +20,6 @@
         android:theme="@style/Theme.IoTApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.BindDeviceActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.GardenManageActivity"
             android:exported="false" />
         <activity

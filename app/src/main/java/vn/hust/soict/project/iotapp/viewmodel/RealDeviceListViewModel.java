@@ -15,17 +15,15 @@ import retrofit2.Response;
 import vn.hust.soict.project.iotapp.api.ApiService;
 import vn.hust.soict.project.iotapp.api.RetrofitInstance;
 import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
-import vn.hust.soict.project.iotapp.model.Area;
 import vn.hust.soict.project.iotapp.model.Device;
-import vn.hust.soict.project.iotapp.model.Garden;
 
 
-public class DeviceListViewModel extends ViewModel {
+public class RealDeviceListViewModel extends ViewModel {
     private MutableLiveData<List<Device>> deviceListLiveData;
     private List<Device> deviceList;
     ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
 
-    public DeviceListViewModel() {
+    public RealDeviceListViewModel() {
         deviceListLiveData = new MutableLiveData<>();
         deviceList = new ArrayList<>();
     }

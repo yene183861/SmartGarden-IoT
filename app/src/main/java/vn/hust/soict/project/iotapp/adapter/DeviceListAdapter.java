@@ -4,14 +4,10 @@ import static vn.hust.soict.project.iotapp.R.color.red;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +17,6 @@ import java.util.List;
 
 import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.model.Device;
-import vn.hust.soict.project.iotapp.ui.BindDeviceActivity;
-import vn.hust.soict.project.iotapp.ui.DeviceManageActivity;
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder> {
     private Context context;
@@ -47,7 +41,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         return new DeviceViewHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvName.setText("Name: " + this.deviceList.get(position).getName());
@@ -58,14 +51,12 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         boolean status = this.deviceList.get(position).isStatus();
         if (status) {
             holder.tvStatus.setText("Status: On");
-        } else{
+        } else {
             holder.tvStatus.setText("Status: Off");
-            holder.tvStatus.setTextColor(red);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.e("getClass().getSimpleName()", getClass().getSimpleName());
-//                    Intent intent = new Intent(super.getClass()., BindDeviceActivity.class);
+                    clickListener.onDeviceClick(deviceList.get(position));
                 }
             });
         }
@@ -106,7 +97,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
 
     public class DeviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, btnEdit, btnDelete;
-        private TextView tvName, tvPosition, tvStatus, value;
+        private TextView tvName, tvPosition, tvStatus, value, time;
 
         public DeviceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -117,10 +108,12 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             tvPosition = itemView.findViewById(R.id.tvPosition);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             value = itemView.findViewById(R.id.value);
+            time = itemView.findViewById(R.id.time);
         }
     }
 
     public interface ItemClickListener {
+        void onDeviceClick(Device device);
 
         void onEditClick(Device device);
 

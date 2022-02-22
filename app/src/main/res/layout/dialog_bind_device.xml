@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.BindDeviceActivity">
+    android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -27,7 +26,7 @@
 
             <LinearLayout
                 android:id="@+id/linear_virtual_device"
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_below="@id/tv_title"
                 android:background="@drawable/bg_round_corners_blue"
@@ -69,7 +68,7 @@
 
             <LinearLayout
                 android:id="@+id/linear_real_device"
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_below="@id/tv_title"
                 android:layout_alignParentEnd="true"
@@ -109,6 +108,7 @@
                 android:layout_centerHorizontal="true">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcvRealDevice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </ScrollView>
