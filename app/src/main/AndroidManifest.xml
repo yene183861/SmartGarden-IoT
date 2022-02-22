@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="vn.hust.soict.project.iotapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,10 +22,12 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.GardenManageActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".ui.SignUpActivity"
-            android:exported="false" /> <!-- <activity -->
+            android:exported="false"
+            tools:ignore="Instantiatable" /> <!-- <activity -->
         <!-- android:name=".ui.DeviceManageActivity" -->
         <!-- android:exported="true"> -->
         <!-- <intent-filter> -->
@@ -37,7 +40,8 @@
         <!-- android:exported="false" /> -->
         <activity
             android:name=".ui.SignInActivity"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,10 +50,12 @@
         </activity>
         <activity
             android:name=".ui.DeviceManageActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".ui.AreaManageActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <service android:name=".MyService" />

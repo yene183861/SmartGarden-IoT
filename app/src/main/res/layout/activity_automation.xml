@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <Toolbar
+        android:id="@+id/toolbar_auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="Automation"
+        android:titleTextColor="@color/black"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@id/toolbar_auto"
+        android:id="@+id/startDateTime"
+        >
+        <EditText
+            android:id="@+id/startTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/start_time"
+            tools:ignore="TextFields"/>
+
+    </com.google.android.material.textfield.TextInputEditText>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/endDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/startDateTime">
+        <EditText
+            android:id="@+id/endTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/end_time"
+            tools:ignore="TextFields"/>
+    </com.google.android.material.textfield.TextInputEditText>
+    <TextView
+        android:id="@+id/tv_chooseGarden"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose garden"/>
+
+    <TextView
+        android:id="@+id/tv_chooseArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Area"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/red"
+            android:text="Cancel"/>
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/blue"
+            android:text="Save"/>
+    </LinearLayout>
+</RelativeLayout>
