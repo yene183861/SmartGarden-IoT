@@ -61,6 +61,9 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     private DeviceListViewModel deviceListViewModel;
     private List<Device> deviceList = new ArrayList<>();
     List<Device> deviceList1;
+    boolean isHaveLamp = false;
+    boolean isHavePump = false;
+    //Device lamp, pump;
     private DeviceListAdapter adapter;
     private Device deviceForEdit;
     public static final int MSG_GET_DEVICES = 1;
@@ -111,36 +114,37 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         layoutLamp.setVisibility(View.GONE);
         layoutPump.setVisibility(View.GONE);
     }
-    private void setRcvDevice(){
+
+    private void setRcvDevice() {
         deviceList1 = new ArrayList<>();
         deviceList = deviceListViewModel.getDeviceList(area.getId());
         int size = deviceList.size();
-        boolean isHaveLamp = false;
-        boolean isHavePump = false;
-        for(int i = 0; i < size; i++){
-            if(deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5){
+        for (int i = 0; i < size; i++) {
+            if (deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5) {
                 deviceList1.add(deviceList.get(i));
-            } else if(deviceList.get(i).getType() == 3){
-                isHaveLamp = true;
+            } else if (deviceList.get(i).getType() == 3) {
+                isHaveLamp = deviceList.get(i).isStatus();
                 layoutLamp.setVisibility(View.VISIBLE);
+                if (isHaveLamp) {
+                    imgLamp.setImageResource(R.drawable.lamp_on);
+                    controlLamp.setChecked(true);
+                }
             } else {
-                isHavePump = true;
+                isHavePump = deviceList.get(i).isStatus();
                 layoutPump.setVisibility(View.VISIBLE);
+                if (isHavePump) {
+                    imgWatering.setImageResource(R.drawable.watering);
+                    controlWatering.setChecked(true);
+                }
             }
         }
-        if(deviceList1 == null){
+        if (deviceList1 == null) {
             rcvDevice.setVisibility(View.GONE);
             tvNoDeviceList.setVisibility(View.VISIBLE);
         } else {
             tvNoDeviceList.setVisibility(View.GONE);
             rcvDevice.setVisibility(View.VISIBLE);
         }
-//        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, true);
-//        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, true);
-//        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 2, true);
-//        deviceList.add(device);
-//        deviceList.add(device1);
-//        deviceList.add(device3);
         adapter = new DeviceListAdapter(this, deviceList1, (DeviceListAdapter.ItemClickListener) this);
         adapter.setDeviceList(deviceList1);
         rcvDevice.setAdapter(adapter);
@@ -152,19 +156,27 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     tvNoDeviceList.setVisibility(View.VISIBLE);
                 } else {
                     deviceList = devices;
-                   deviceList1.clear();
+                    deviceList1.clear();
                     int size = deviceList.size();
-                    boolean isHaveLamp = false;
-                    boolean isHavePump = false;
-                    for(int i = 0; i < size; i++){
-                        if(deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5){
+                    isHaveLamp = false;
+                    isHavePump = false;
+                    for (int i = 0; i < size; i++) {
+                        if (deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5) {
                             deviceList1.add(deviceList.get(i));
-                        } else if(deviceList.get(i).getType() == 3){
-                            isHaveLamp = true;
+                        } else if (deviceList.get(i).getType() == 3) {
+                            isHaveLamp = deviceList.get(i).isStatus();
                             layoutLamp.setVisibility(View.VISIBLE);
+                            if (isHaveLamp) {
+                                imgLamp.setImageResource(R.drawable.lamp_on);
+                                controlLamp.setChecked(true);
+                            }
                         } else {
-                            isHavePump = true;
+                            isHavePump = deviceList.get(i).isStatus();
                             layoutPump.setVisibility(View.VISIBLE);
+                            if (isHavePump) {
+                                imgWatering.setImageResource(R.drawable.watering);
+                                controlWatering.setChecked(true);
+                            }
                         }
                     }
                     adapter.setDeviceList(deviceList1);
@@ -187,31 +199,41 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         controlWatering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    imgWatering.setImageResource(R.drawable.watering);
+                if (isHavePump) {
+                    if (isChecked) {
+                        imgWatering.setImageResource(R.drawable.watering);
+                    } else {
+                        imgWatering.setImageResource(R.drawable.not_watering);
+                    }
+                    int type;
+                    if (isChecked) {
+                        type = 0;
+                    } else type = 1;
+                    publish(0, type, SOILMOIST_TOPIC);
                 } else {
-                    imgWatering.setImageResource(R.drawable.not_watering);
+                    controlWatering.setChecked(false);
+                    Toast.makeText(DeviceManageActivity.this, "You must bind pump with real device", Toast.LENGTH_LONG).show();
                 }
-                int type;
-                if (isChecked) {
-                    type = 0;
-                } else type = 1;
-                publish(0, type, SOILMOIST_TOPIC);
             }
         });
         controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    imgLamp.setImageResource(R.drawable.lamp_on);
+                if (isHaveLamp) {
+                    if (isChecked) {
+                        imgLamp.setImageResource(R.drawable.lamp_on);
+                    } else {
+                        imgLamp.setImageResource(R.drawable.lamp_off);
+                    }
+                    int type; // 1 là off, 0 là on
+                    if (isChecked) {
+                        type = 0;
+                    } else type = 1;
+                    publish(1, type, LAMP_TOPIC);
                 } else {
-                    imgLamp.setImageResource(R.drawable.lamp_off);
+                    controlLamp.setChecked(false);
+                    Toast.makeText(DeviceManageActivity.this, "You must bind lamp with real device", Toast.LENGTH_LONG).show();
                 }
-                int type; // 1 là off, 0 là on
-                if (isChecked) {
-                    type = 0;
-                } else type = 1;
-                publish(1, type, LAMP_TOPIC);
             }
         });
         layoutLamp.setOnClickListener(new View.OnClickListener() {
@@ -232,18 +254,17 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     @Override
     protected void onDestroy() {
         disconnectMQTT();
-        //myAsync.cancel(true);
-        Log.e("onDestroy", "onDestroy");
-        Log.e("myAsync", "onCancelled");
-
+        Log.e("disconnectMQTT", "success");
         super.onDestroy();
     }
-private void bindDevice(){
-    AlertDialog dialogBuilder = new AlertDialog.Builder(DeviceManageActivity.this).create();
-    View dialogView = getLayoutInflater().inflate(R.layout.dialog_bind_device, null);
-    dialogBuilder.setView(dialogView);
-    dialogBuilder.show();
-}
+
+    private void bindDevice() {
+        AlertDialog dialogBuilder = new AlertDialog.Builder(DeviceManageActivity.this).create();
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_bind_device, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
     private void showAddDialog(boolean isEdit) {
         AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_device, null);
@@ -264,9 +285,6 @@ private void bindDevice(){
             enterNameDevice.setText(deviceForEdit.getName());
             enterPositionDevice.setText(deviceForEdit.getPosition());
             switch (deviceForEdit.getType()) {
-                case 1:
-                    radioGroupDeviceType.check(R.id.radioButtonTemperature);
-                    break;
                 case 2:
                     radioGroupDeviceType.check(R.id.radioButtonSoilMoisture);
                     break;
@@ -277,7 +295,7 @@ private void bindDevice(){
                     radioGroupDeviceType.check(R.id.radioButtonPump);
                     break;
                 default:
-                    radioGroupDeviceType.check(R.id.radioButtonSoilMoisture);
+                    radioGroupDeviceType.check(R.id.radioButtonTemperature);
 
             }
         }
@@ -299,7 +317,7 @@ private void bindDevice(){
                     type = 1;
                 } else if (type == R.id.radioButtonSoilMoisture) {
                     type = 2;
-                } else if (type == R.id.radioButtonLamp){
+                } else if (type == R.id.radioButtonLamp) {
                     type = 3;
                 } else {
                     type = 4;
@@ -317,8 +335,8 @@ private void bindDevice(){
                     //call view model
                     Device device = new Device(area.getId(), name, area.getPosition(), type, false);
                     deviceListViewModel.insertDevice(device);
-                    if(type == 2) {
-                        Device device1 = new Device(area.getId(), name, area.getPosition(), 2, false);
+                    if (type == 1) {
+                        Device device1 = new Device(area.getId(), name, area.getPosition(), 5, false);
                         deviceListViewModel.insertDevice(device1);
                     }
                 }
@@ -393,7 +411,7 @@ private void bindDevice(){
                         String json = new String(message.getPayload());
                         Gson gson = new Gson(); // khởi tạo Gson
                         DataReceive dataReceive = gson.fromJson(json, DataReceive.class);
-Log.e("mmesssss", String.valueOf(dataReceive.getTemperature()));
+                        Log.e("mmesssss", String.valueOf(dataReceive.getTemperature()));
                         //DataReceive dataReceive = JSONObject.;
 //                        Log.e("message", dataReceive.getDate().toString());
 //                        Log.e("message", dataReceive.getTime().toString());
@@ -402,12 +420,12 @@ Log.e("mmesssss", String.valueOf(dataReceive.getTemperature()));
 //                        Log.e("message", String.valueOf(dataReceive.getHumidity_air()));
                         //deviceList1.clear();
                         int size = deviceList1.size();
-                        for(int i = 0; i < size; i++){
+                        for (int i = 0; i < size; i++) {
                             int type = deviceList1.get(i).getType();
-                            if(type == 1){
+                            if (type == 1) {
                                 Log.e("temperature", "dataReceive.getTemperature()");
                                 deviceList1.get(i).setValue(dataReceive.getTemperature());
-                            } else if(type == 2){
+                            } else if (type == 2) {
                                 Log.e("Humidity_air", "dataReceive.getHumidity_air()");
                                 deviceList1.get(i).setValue(dataReceive.getHumidity());
                             } else {

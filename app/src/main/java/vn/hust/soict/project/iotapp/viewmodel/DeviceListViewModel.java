@@ -66,9 +66,11 @@ public class DeviceListViewModel extends ViewModel {
                 if (response.code() == 200) {
                     Log.e("createDevice", "success");
                     if (device.getType() == 2 || device.getType() == 1 || device.getType() == 5) {
-                        deviceList.add(device);
+                        //deviceList.add(device);
+                        deviceList = getDeviceList(device.getArea());
                     }
-                    deviceListLiveData.setValue(deviceList);
+                    //deviceListLiveData.setValue(deviceList);
+                    //deviceList = getDeviceList(device.getArea());
                 } else {
                     try {
                         Log.e("createDevice", "error code: " + response.code() + "error body: " + response.errorBody().string());

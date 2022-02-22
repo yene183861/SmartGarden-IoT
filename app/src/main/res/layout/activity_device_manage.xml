@@ -80,11 +80,10 @@
                 android:id="@+id/imgWatering"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/watering"/>
+                android:src="@drawable/not_watering"/>
             <Switch
                 android:id="@+id/controlWatering"
                 android:layout_marginTop="10dp"
-                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Watering"
@@ -102,13 +101,12 @@
                 android:id="@+id/imgLamp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/lamp_on"/>
+                android:src="@drawable/lamp_off"/>
             <Switch
                 android:id="@+id/controlLamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Turn on/off"
-                android:checked="true"
                 android:layout_marginTop="10dp"
                 android:switchPadding="5dp"/>
         </LinearLayout>
