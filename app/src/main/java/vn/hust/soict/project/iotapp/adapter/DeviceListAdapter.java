@@ -58,14 +58,13 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         boolean status = this.deviceList.get(position).isStatus();
         if (status) {
             holder.tvStatus.setText("Status: On");
-        } else{
+        } else {
             holder.tvStatus.setText("Status: Off");
             holder.tvStatus.setTextColor(red);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.e("getClass().getSimpleName()", getClass().getSimpleName());
-//                    Intent intent = new Intent(super.getClass()., BindDeviceActivity.class);
+                    clickListener.onDeviceClick(deviceList.get(position));
                 }
             });
         }
@@ -121,6 +120,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
     }
 
     public interface ItemClickListener {
+        void onDeviceClick(Device device);
 
         void onEditClick(Device device);
 

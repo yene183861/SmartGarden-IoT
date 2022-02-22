@@ -39,6 +39,7 @@ public class DeviceListViewModel extends ViewModel {
                     deviceList = response.body();
                     deviceListLiveData.setValue(deviceList);
                     Log.e("getDevice", "success");
+                    Log.e("getDevice", "" + deviceList.size());
                 } else {
                     Log.e("getDevice", "failed: " + response.code() + " " + response.errorBody());
                 }

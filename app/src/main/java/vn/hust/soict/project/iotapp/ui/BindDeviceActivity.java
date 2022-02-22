@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import vn.hust.soict.project.iotapp.R;
+
 public class BindDeviceActivity extends AppCompatActivity {
 
     @Override

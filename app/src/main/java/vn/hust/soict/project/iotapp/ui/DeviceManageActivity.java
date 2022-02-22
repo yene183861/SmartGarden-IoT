@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,8 +34,11 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +48,7 @@ import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.adapter.DeviceListAdapter;
 import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
 import vn.hust.soict.project.iotapp.model.Area;
+import vn.hust.soict.project.iotapp.model.DataReceive;
 import vn.hust.soict.project.iotapp.model.Device;
 import vn.hust.soict.project.iotapp.viewmodel.DeviceListViewModel;
 
@@ -60,9 +66,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
-    //MyAsync myAsync;
-    private Handler handler;
-    String topic = "iot-nhom8-20211/#";
+    String topic = "iot-nhom8-20211/arden1/area1/#";
     public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/temperature";
     public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/humidity";
     public static final String LAMP_TOPIC = "iot-nhom8-20211/garden1/area1/lamp";
@@ -83,53 +87,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvDevice.setLayoutManager(linearLayoutManager);
         deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
-//        deviceList = deviceListViewModel.getDeviceList(area.getId());
-//        int size = deviceList.size();
-//        boolean isHaveLamp = false;
-//        boolean isHavePump = false;
-//        for(int i = 0; i < size; i++){
-//            if(deviceList.get(i).getType() < 4 || deviceList.get(i).getType() == 6){
-//                deviceList1.add(deviceList.get(i));
-//            } else if(deviceList.get(i).getType() == 4){
-//                isHaveLamp = true;
-//                layoutLamp.setVisibility(View.VISIBLE);
-//            } else {
-//                isHavePump = true;
-//                layoutPump.setVisibility(View.VISIBLE);
-//            }
-//        }
-//        if(deviceList1 == null){
-//            rcvDevice.setVisibility(View.GONE);
-//            tvNoDeviceList.setVisibility(View.VISIBLE);
-//        } else {
-//            tvNoDeviceList.setVisibility(View.GONE);
-//            rcvDevice.setVisibility(View.VISIBLE);
-//        }
-//        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 67.1, true);
-//        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 12.34, true);
-//        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 6, 6.4, true);
-//        deviceList.add(device);
-//        deviceList.add(device1);
-//        deviceList.add(device3);
-//        adapter = new DeviceListAdapter(this, deviceList1, (DeviceListAdapter.ItemClickListener) this);
-//        adapter.setDeviceList(deviceList1);
-//        rcvDevice.setAdapter(adapter);
-//        deviceListViewModel.getDeviceListObserver().setValue(deviceList1);
-//        deviceListViewModel.getDeviceListObserver().observe(this, new Observer<List<Device>>() {
-//            @Override
-//            public void onChanged(List<Device> devices) {
-//                if (devices == null) {
-//                    rcvDevice.setVisibility(View.GONE);
-//                    tvNoDeviceList.setVisibility(View.VISIBLE);
-//                } else {
-//                    deviceList = devices;
-//                    adapter.setDeviceList(devices);
-//                    tvNoDeviceList.setVisibility(View.GONE);
-//                    rcvDevice.setVisibility(View.VISIBLE);
-//                }
-//
-//            }
-//        });
         setRcvDevice();
         initListener();
     }
@@ -178,16 +135,15 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             tvNoDeviceList.setVisibility(View.GONE);
             rcvDevice.setVisibility(View.VISIBLE);
         }
-//        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, 67.1, true);
-//        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, 12.34, true);
-//        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 6, 6.4, true);
+//        Device device = new Device("idArea", "nhiệt độ", "khu 10 cuoi vuon", 1, true);
+//        Device device1 = new Device("idArea", "do am dat", "khu 10 cuoi vuon", 2, true);
+//        Device device3 = new Device("idArea", "do am kk", "khu 10 cuoi vuon", 2, true);
 //        deviceList.add(device);
 //        deviceList.add(device1);
 //        deviceList.add(device3);
         adapter = new DeviceListAdapter(this, deviceList1, (DeviceListAdapter.ItemClickListener) this);
         adapter.setDeviceList(deviceList1);
         rcvDevice.setAdapter(adapter);
-        //deviceListViewModel.getDeviceListObserver().setValue(deviceList);
         deviceListViewModel.getDeviceListObserver().observe(this, new Observer<List<Device>>() {
             @Override
             public void onChanged(List<Device> devices) {
@@ -196,7 +152,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     tvNoDeviceList.setVisibility(View.VISIBLE);
                 } else {
                     deviceList = devices;
-                    deviceList1 = null;
+                   deviceList1.clear();
                     int size = deviceList.size();
                     boolean isHaveLamp = false;
                     boolean isHavePump = false;
@@ -212,6 +168,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                         }
                     }
                     adapter.setDeviceList(deviceList1);
+                    rcvDevice.setAdapter(adapter);
                     tvNoDeviceList.setVisibility(View.GONE);
                     rcvDevice.setVisibility(View.VISIBLE);
                 }
@@ -344,9 +301,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     Device device = new Device(area.getId(), name, area.getPosition(), type, false);
                     deviceListViewModel.insertDevice(device);
                     if(type == 2) {
-                        Device device1 = new Device(area.getId(), name, area.getPosition(), 5, false);
+                        Device device1 = new Device(area.getId(), name, area.getPosition(), 2, false);
                         deviceListViewModel.insertDevice(device1);
-
                     }
                 }
                 dialogBuilder.dismiss();
@@ -354,6 +310,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         });
         dialogBuilder.setView(dialogView);
         dialogBuilder.show();
+    }
+
+    @Override
+    public void onDeviceClick(Device device) {
+        Intent intent = new Intent(DeviceManageActivity.this, BindDeviceActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -411,21 +373,31 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
                         Log.d("subscribe", "topic>>" + topic);
-                        Log.d("message", new String(message.getPayload()));
-//                        String json = new String(message.getPayload());
-//                        Gson gson = new Gson(); // khởi tạo Gson
-//                        Device device = gson.fromJson(json, Device.class);
-//                        int size = deviceList1.size();
-//                        for(int i = 0; i < size; i++){
-//                            int type = deviceList1.get(i).getType();
-//                            if(type == 1 && topic.compareTo(TEMPERATURE_TOPIC) == 0){
-//                                deviceList1.get(i).setValue(device.getValue());
-//                            } else if(type == 2 && topic.compareTo(TEMPERATURE_TOPIC) == 0){
-//                                deviceList1.get(i).setValue(device.getValue());
-//                            } else {
-//                                deviceList1.get(i).setValue(device.getValue());
-//                            }
-//                        }
+                        Log.e("message", new String(message.getPayload()));
+                        String json = new String(message.getPayload());
+                        Gson gson = new Gson(); // khởi tạo Gson
+                        DataReceive dataReceive = gson.fromJson(json, DataReceive.class);
+
+                        //DataReceive dataReceive = JSONObject.;
+//                        Log.e("message", dataReceive.getDate().toString());
+//                        Log.e("message", dataReceive.getTime().toString());
+//                        Log.e("message", String.valueOf(dataReceive.getTemperature()));
+//                        Log.e("message", String.valueOf(dataReceive.getHumidity_soil()));
+//                        Log.e("message", String.valueOf(dataReceive.getHumidity_air()));
+                        int size = deviceList1.size();
+                        for(int i = 0; i < size; i++){
+                            int type = deviceList1.get(i).getType();
+                            if(type == 1){
+                                Log.e("temperature", "dataReceive.getTemperature()");
+                                deviceList1.get(i).setValue(dataReceive.getTemperature());
+                            } else if(type == 2){
+                                Log.e("Humidity_air", "dataReceive.getHumidity_air()");
+                                deviceList1.get(i).setValue(dataReceive.getHumidity_air());
+                            } else {
+                                Log.e("getHumidity_soil", "dataReceive.getHumidity_air()");
+                                deviceList1.get(i).setValue(dataReceive.getHumidity_soil());
+                            }
+                        }
                     }
 
                     @Override
@@ -483,67 +455,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             Toast.makeText(DeviceManageActivity.this, "publish error", Toast.LENGTH_SHORT).show();
         }
     }
-
-    //
-//    private void createThread() {
-//        myAsync = new MyAsync(deviceList, area.getId(), deviceListViewModel);
-//        myAsync.execute();
-//    }
-
-//    private class MyAsync extends AsyncTask<DeviceListViewModel, List<Device>, Void> {
-//        private List<Device> mList;
-//        private String idArea;
-//        private DeviceListViewModel deviceListViewModel;
-//
-//        public MyAsync(List<Device> mList, String idArea, DeviceListViewModel deviceListViewModel) {
-//            this.mList = mList;
-//            this.idArea = idArea;
-//            this.deviceListViewModel = deviceListViewModel;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            idArea = area.getId();
-//            mList = new ArrayList<>();
-//            //super.onPreExecute();
-//        }
-
-//        @Override
-//        protected Void doInBackground(DeviceListViewModel... deviceListViewModels) {
-//            while (true) {
-//                mList = new ArrayList<>();
-//                Log.e("request", "success");
-//                //if(mList != null){
-//                    mList = deviceListViewModels[0].getDeviceList(idArea);
-//                    publishProgress(mList);
-//                //}
-//                //setRcvDevice();
-//                if (isCancelled()){
-//                    break;
-//                }
-//                try {
-//                    Thread.sleep(120000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            return null;
-//        }
-
-//        @Override
-//        protected void onProgressUpdate(List<Device>... values) {
-//            super.onProgressUpdate(values);
-//            mList = values[0];
-//            //adapter.setDeviceList(deviceList1);
-//            setRcvDevice();
-//        }
-//
-//        @Override
-//        protected void onCancelled() {
-//            Log.e("onCancelled", "true");
-//            super.onCancelled();
-//        }
 
 }
 
