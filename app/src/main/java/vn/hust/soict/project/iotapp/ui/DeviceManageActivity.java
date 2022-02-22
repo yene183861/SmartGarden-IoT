@@ -1,7 +1,9 @@
 package vn.hust.soict.project.iotapp.ui;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,17 +53,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.adapter.DeviceListAdapter;
+import vn.hust.soict.project.iotapp.adapter.GardenListAdapter;
+import vn.hust.soict.project.iotapp.adapter.RealDeviceListAdapter;
 import vn.hust.soict.project.iotapp.api.ApiService;
 import vn.hust.soict.project.iotapp.api.RetrofitInstance;
 import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
 import vn.hust.soict.project.iotapp.model.Area;
 import vn.hust.soict.project.iotapp.model.DataReceive;
 import vn.hust.soict.project.iotapp.model.Device;
+import vn.hust.soict.project.iotapp.model.Garden;
 import vn.hust.soict.project.iotapp.viewmodel.DeviceListViewModel;
+import vn.hust.soict.project.iotapp.viewmodel.GardenListViewModel;
+import vn.hust.soict.project.iotapp.viewmodel.RealDeviceListViewModel;
 
 public class DeviceManageActivity extends AppCompatActivity implements DeviceListAdapter.ItemClickListener {
     private ImageView btnAddNewDevice, imgLamp, imgWatering;
-    private TextView tvNoDeviceList, txtAreaName, txtAreaPosition, txtAcreage;
+    private TextView tvNoDeviceList, txtAreaName, txtAreaPosition, txtAcreage, time;
     private RecyclerView rcvDevice;
     private LinearLayout layoutControl, layoutLamp, layoutPump;
     private Switch controlLamp, controlWatering;
@@ -73,7 +80,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     Device lamp, pump;
     private DeviceListAdapter adapter;
     private Device deviceForEdit;
-    public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
     String topic = "iot-nhom8-20211/garden1/area1";
@@ -87,8 +93,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_manage);
-        getSupportActionBar().setTitle("Manage Device");
+        //getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        //Toobar đã như ActionBar
+        actionBar.setTitle("Manage Device");
         initUi();
         connectMQTT();
         //initHandler();
@@ -107,6 +118,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         layoutControl = findViewById(R.id.layoutControl);
         layoutLamp = findViewById(R.id.layoutLamp);
         layoutPump = findViewById(R.id.layoutPump);
+        time = findViewById(R.id.time);
         controlLamp = (Switch) findViewById(R.id.controlLamp);
         controlWatering = (Switch) findViewById(R.id.controlWatering);
         imgLamp = findViewById(R.id.imgLamp);
@@ -222,7 +234,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     publish(0, type, SOILMOIST_TOPIC);
                 } else {
                     controlWatering.setChecked(false);
-                    Toast.makeText(DeviceManageActivity.this, "You must bind pump with real device", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DeviceManageActivity.this, "You must bind pump with real device", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -242,20 +254,28 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     publish(1, type, LAMP_TOPIC);
                 } else {
                     controlLamp.setChecked(false);
-                    Toast.makeText(DeviceManageActivity.this, "You must bind lamp with real device", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DeviceManageActivity.this, "You must bind lamp with real device", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         layoutLamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bindDevice(lamp);
+                if(lamp.isStatus() == false){
+                    Intent intent = new Intent(DeviceManageActivity.this, BindActivity.class);
+                    intent.putExtra("device", lamp);
+                    startActivity(intent);
+                }
             }
         });
         layoutPump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bindDevice(pump);
+                if(pump.isStatus() == false){
+                    Intent intent = new Intent(DeviceManageActivity.this, BindActivity.class);
+                    intent.putExtra("device", pump);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -266,53 +286,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         disconnectMQTT();
         Log.e("disconnectMQTT", "success");
         super.onDestroy();
-    }
-
-    private void bindDevice(Device device) {
-        AlertDialog dialogBuilder = new AlertDialog.Builder(DeviceManageActivity.this).create();
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_bind_device, null);
-        TextView tvNameDevice = dialogView.findViewById(R.id.tv_name_device);
-        TextView tvAreaDevice = dialogView.findViewById(R.id.tv_area_device);
-        TextView tvNameRealDevice = dialogView.findViewById(R.id.tv_name_realdevice);
-        RecyclerView rcvRealDevice = dialogView.findViewById(R.id.rcvRealDevice);
-        Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
-        Button btnSave = dialogView.findViewById(R.id.btn_save);
-        tvNameDevice.setText(device.getName());
-        tvAreaDevice.setText(device.getArea());
-        tvAreaDevice.setVisibility(View.GONE);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogBuilder.dismiss();
-            }
-        });
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
-                Call<Void> call = apiService.bind(DataLocalManager.getTokenServer(), "id");
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.code() == 200) {
-                            device.setStatus(true);
-                        } else {
-                            Toast.makeText(DeviceManageActivity.this, "Ghep noi that bai", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("bindDevice", "onFailure" + t);
-                        Toast.makeText(DeviceManageActivity.this, "Ghep noi that bai", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialogBuilder.dismiss();
-            }
-
-        });
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.show();
     }
 
     private void showAddDialog(boolean isEdit) {
@@ -328,6 +301,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         RadioButton radioButtonSoilMoisture = dialogView.findViewById(R.id.radioButtonSoilMoisture);
         RadioButton radioButtonLamp = dialogView.findViewById(R.id.radioButtonLamp);
         RadioButton radioButtonPump = dialogView.findViewById(R.id.radioButtonPump);
+        enterPositionDevice.setText(area.getPosition());
 
         if (isEdit) {
             addDeviceTitleDialog.setText("Update information device");
@@ -384,10 +358,10 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 } else {
                     //call view model
                     Device device = new Device(area.getId(), name, area.getPosition(), type, false);
-                    deviceListViewModel.insertDevice(device);
+                    deviceList = deviceListViewModel.insertDevice(device);
                     if (type == 1) {
                         Device device1 = new Device(area.getId(), "Độ ẩm không khí", area.getPosition(), 5, false);
-                        deviceListViewModel.insertDevice(device1);
+                        deviceList = deviceListViewModel.insertDevice(device1);
                     }
                 }
                 dialogBuilder.dismiss();
@@ -399,7 +373,11 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 
     @Override
     public void onDeviceClick(Device device) {
-        bindDevice(device);
+        if(device.isStatus() == false){
+            Intent intent = new Intent(DeviceManageActivity.this, BindActivity.class);
+            intent.putExtra("device", device);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -456,7 +434,9 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            Log.e("time", "" + LocalDateTime.now());
+                            time.setText("Time: " + LocalDateTime.now());
+                            time.setVisibility(View.VISIBLE);
+                            //Log.e("time", "" + LocalDateTime.now());
                         }
                         Log.d("subscribe", "topic>>" + topic);
                         Log.e("message", new String(message.getPayload()));
@@ -467,13 +447,12 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                         int size = deviceList1.size();
                         for (int i = 0; i < size; i++) {
                             int type = deviceList1.get(i).getType();
-                            if (type == 1) {
-                                Log.e("temperature", "dataReceive.getTemperature()");
+                            if (type == 1 && deviceList1.get(i).isStatus()) {
                                 deviceList1.get(i).setValue(dataReceive.getTemperature());
-                            } else if (type == 2) {
+                            } else if (type == 2 && deviceList1.get(i).isStatus()) {
                                 Log.e("Humidity_air", "dataReceive.getHumidity_air()");
                                 deviceList1.get(i).setValue(dataReceive.getHumidity());
-                            } else {
+                            } else if(type == 5 && deviceList1.get(i).isStatus()){
                                 Log.e("getHumidity_soil", "dataReceive.getHumidity_air()");
                                 deviceList1.get(i).setValue(dataReceive.getSoil());
                             }
@@ -534,7 +513,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(DeviceManageActivity.this, "publish error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(DeviceManageActivity.this, "publish error", Toast.LENGTH_SHORT).show();
+            Log.e("error", "publish error");
         }
     }
 

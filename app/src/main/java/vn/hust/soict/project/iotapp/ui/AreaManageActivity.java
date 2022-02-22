@@ -8,8 +8,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,8 +42,12 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
         setContentView(R.layout.activity_area_manage);
 
         garden = (Garden) getIntent().getSerializableExtra("garden");
-        getSupportActionBar().setTitle("Manage Area");
-
+        //getSupportActionBar().setTitle("Manage Area");
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        //Toobar đã như ActionBar
+        actionBar.setTitle("Manage Area");
         initUi();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

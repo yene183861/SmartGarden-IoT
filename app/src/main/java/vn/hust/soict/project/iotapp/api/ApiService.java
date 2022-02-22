@@ -47,6 +47,8 @@ public interface ApiService {
     @POST("/devices/create")
     Call<Device> createDevice(@Header("token") String token, @Body Device device);
 
-    @POST("")
-    Call<Void> bind(@Header("token") String token,String id);
+    @GET("/devices/manage/getUnbinded")
+    Call<List<Device>> getRealDevices(@Header("token") String token,@Query("type") int type);
+    @GET("/devices/manage/bind")
+    Call<Void> bindDevice(@Header("token") String token, @Query("realId") String realId, @Query("virtualId") String virtualId);
 }

@@ -2,11 +2,12 @@ package vn.hust.soict.project.iotapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-public class Device {
+public class Device implements Serializable {
     @SerializedName("_id")
     private String id;
     private String area;
@@ -20,7 +21,6 @@ public class Device {
     private double value;
     private boolean status;
     private String topic;
-    private LocalDateTime time;
 
 
     public Device(String idArea, String name, String position, int type, boolean status) {
@@ -33,7 +33,7 @@ public class Device {
     }
 
 
-    public Device(String id, String area, String name, String position, int type, double value, boolean status, String topic, LocalDateTime time) {
+    public Device(String id, String area, String name, String position, int type, double value, boolean status, String topic) {
         this.id = id;
         this.area = area;
         this.name = name;
@@ -42,7 +42,11 @@ public class Device {
         this.value = value;
         this.status = status;
         this.topic = topic;
-        this.time = time;
+    }
+
+    public Device(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public String getName() {
@@ -109,11 +113,4 @@ public class Device {
         this.topic = topic;
     }
 
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
 }

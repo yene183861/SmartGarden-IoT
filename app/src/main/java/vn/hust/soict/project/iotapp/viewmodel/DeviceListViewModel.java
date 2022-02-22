@@ -58,7 +58,7 @@ public class DeviceListViewModel extends ViewModel {
         return deviceListLiveData;
     }
 
-    public void insertDevice(Device device) {
+    public List<Device> insertDevice(Device device) {
         Call<Device> call = apiService.createDevice(DataLocalManager.getTokenServer(), device);
         call.enqueue(new Callback<Device>() {
             @Override
@@ -86,6 +86,7 @@ public class DeviceListViewModel extends ViewModel {
                 Log.e("createDevice", "onFailure" + t);
             }
         });
+        return deviceList;
     }
 
     public void updateDevice(Device device) {

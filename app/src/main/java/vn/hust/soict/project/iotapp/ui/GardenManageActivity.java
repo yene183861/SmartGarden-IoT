@@ -1,7 +1,9 @@
 package vn.hust.soict.project.iotapp.ui;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,11 +49,15 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_garden_manage);
-        getSupportActionBar().setTitle("Manage Garden");
+//        getSupportActionBar().setTitle("Manage Garden");
+        Toolbar toolbar1 = (Toolbar)findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar1);
+        ActionBar actionBar = getSupportActionBar();
+        //Toobar đã như ActionBar
+        actionBar.setTitle("Manage Garden");
         btnAddNewGarden = findViewById(R.id.btnAddNewGarden);
         rcvGarden = findViewById(R.id.rcvGarden);
         tvNoGardenList = findViewById(R.id.tvNoGardenList);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rcvGarden.setLayoutManager(linearLayoutManager);
         adapter = new GardenListAdapter(this, gardenList, this);

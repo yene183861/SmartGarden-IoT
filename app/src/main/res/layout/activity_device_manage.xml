@@ -4,9 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     tools:context=".ui.DeviceManageActivity">
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/green" />
     <LinearLayout
         android:id="@+id/layoutInfoArea"
         android:layout_width="match_parent"
@@ -14,7 +22,8 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3"
+        android:layout_margin="10sp">
 
         <TextView
             android:id="@+id/txtAreaName"
@@ -34,6 +43,18 @@
             android:layout_height="wrap_content"
             android:text="Acreage: (m2)" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/layoutInfoArea"
+        app:layout_constraintBottom_toTopOf="@+id/rcvDevice"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        android:text="Time"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvDevice"
@@ -42,13 +63,15 @@
         android:layout_marginBottom="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutInfoArea"
-    android:layout_marginTop="20dp"/>
+    android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"/>
 
     <ImageView
         android:id="@+id/btnAddNewDevice"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:src="@drawable/add_device"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

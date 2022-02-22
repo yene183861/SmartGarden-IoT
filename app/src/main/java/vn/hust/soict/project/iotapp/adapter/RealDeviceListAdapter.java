@@ -27,7 +27,7 @@ public RealDeviceListAdapter(Context context, List<Device> list, ItemClickListen
     this.list = list;
     this.clickListener = clickListener;
 }
-public void setlist(List<Device> list){
+public void setList(List<Device> list){
     this.list = list;
     notifyDataSetChanged();
 }
@@ -41,19 +41,19 @@ public void setlist(List<Device> list){
 
     @Override
     public void onBindViewHolder(@NonNull RealDeviceViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.tvAreaName.setText(this.list.get(position).getName());
-        holder.tvAreaPosition.setText(this.list.get(position).getPosition());
-      if(position % 3 == 0){
-          holder.imgArea.setImageResource(R.drawable.area1);
-      } else if(position % 3 == 1){
-          holder.imgArea.setImageResource(R.drawable.area2);
-      } else {
-          holder.imgArea.setImageResource(R.drawable.area3);
-      }
+        holder.tvName.setText("Real device: " + this.list.get(position).getName());
+//        holder.tvAreaPosition.setText(this.list.get(position).getArea());
+//      if(position % 3 == 0){
+//          holder.imgArea.setImageResource(R.drawable.area1);
+//      } else if(position % 3 == 1){
+//          holder.imgArea.setImageResource(R.drawable.area2);
+//      } else {
+//          holder.imgArea.setImageResource(R.drawable.area3);
+//      }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickListener.onClick(list.get(position));
+                clickListener.onRealClick(list.get(position));
             }
         });
 
@@ -69,19 +69,21 @@ public void setlist(List<Device> list){
 
     public class RealDeviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgArea, imgEditArea, imgDeleteArea;
-        private TextView tvAreaName, tvAreaPosition;
+        private TextView tvName, tvAreaPosition;
         public RealDeviceViewHolder(@NonNull View itemView) {
             super(itemView);
             imgArea = itemView.findViewById(R.id.imgGarden);
             imgEditArea = itemView.findViewById(R.id.imgEditGarden);
             imgDeleteArea = itemView.findViewById(R.id.imgDeleteGarden);
-            tvAreaName = itemView.findViewById(R.id.tvGardenName);
+            tvName = itemView.findViewById(R.id.tvGardenName);
             tvAreaPosition = itemView.findViewById(R.id.tvGardenAddress);
             imgEditArea.setVisibility(View.GONE);
             imgDeleteArea.setVisibility(View.GONE);
+            tvAreaPosition.setVisibility(View.GONE);
+            imgArea.setVisibility(View.GONE);
         }
     }
     public interface ItemClickListener{
-         void onClick(Device device);
+         void onRealClick(Device device);
     }
 }
