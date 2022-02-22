@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/rcvDevice"
         android:orientation="horizontal">
         <LinearLayout
-            android:id="@+id/layoutLamp"
+            android:id="@+id/layoutPump"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -80,17 +80,18 @@
                 android:id="@+id/imgWatering"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/not_watering"/>
+                android:src="@drawable/watering"/>
             <Switch
                 android:id="@+id/controlWatering"
                 android:layout_marginTop="10dp"
+                android:checked="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Watering"
                 android:switchPadding="5dp"/>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/layoutPump"
+            android:id="@+id/layoutLamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -101,12 +102,13 @@
                 android:id="@+id/imgLamp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/lamp_off"/>
+                android:src="@drawable/lamp_on"/>
             <Switch
                 android:id="@+id/controlLamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Turn off"
+                android:text="Turn on/off"
+                android:checked="true"
                 android:layout_marginTop="10dp"
                 android:switchPadding="5dp"/>
         </LinearLayout>

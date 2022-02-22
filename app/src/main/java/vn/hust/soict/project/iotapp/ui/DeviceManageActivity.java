@@ -66,7 +66,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     public static final int MSG_GET_DEVICES = 1;
     public static final String CHANNEL_ID = "push_notification_id";
     MqttAndroidClient client;
-    String topic = "iot-nhom8-20211/arden1/area1/#";
+    String topic = "iot-nhom8-20211/garden1/area1/#";
     public static final String TEMPERATURE_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/temperature";
     public static final String HUMIDITY_TOPIC = "iot-nhom8-20211/garden1/area1/dht11/humidity";
     public static final String LAMP_TOPIC = "iot-nhom8-20211/garden1/area1/lamp";
@@ -194,8 +194,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 }
                 int type;
                 if (isChecked) {
-                    type = 1;
-                } else type = 0;
+                    type = 0;
+                } else type = 1;
                 publish(0, type, SOILMOIST_TOPIC);
             }
         });
@@ -207,10 +207,10 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 } else {
                     imgLamp.setImageResource(R.drawable.lamp_off);
                 }
-                int type;
+                int type; // 1 là off, 0 là on
                 if (isChecked) {
-                    type = 1;
-                } else type = 0;
+                    type = 0;
+                } else type = 1;
                 publish(1, type, LAMP_TOPIC);
             }
         });
