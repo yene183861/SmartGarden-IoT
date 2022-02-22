@@ -7,16 +7,15 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class DataReceive {
-private double Temperature;
-private double Humidity;
-private double Soil;
+    private double Temperature;
+    private double Humidity;
+    private double Soil;
 
     public DataReceive(double temperature, double humidity, double soil) {
         Temperature = temperature;
         Humidity = humidity;
         Soil = soil;
     }
-
 
     public double getTemperature() {
         return Temperature;

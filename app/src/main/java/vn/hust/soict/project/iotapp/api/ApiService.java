@@ -46,4 +46,7 @@ public interface ApiService {
 
     @POST("/devices/create")
     Call<Device> createDevice(@Header("token") String token, @Body Device device);
+
+    @POST("")
+    Call<Void> bind(@Header("token") String token,String id);
 }

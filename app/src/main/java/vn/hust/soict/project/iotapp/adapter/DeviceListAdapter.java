@@ -41,7 +41,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         return new DeviceViewHolder(view);
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull DeviceViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.tvName.setText("Name: " + this.deviceList.get(position).getName());
@@ -54,7 +53,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             holder.tvStatus.setText("Status: On");
         } else {
             holder.tvStatus.setText("Status: Off");
-            holder.tvStatus.setTextColor(red);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,7 +97,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
 
     public class DeviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView img, btnEdit, btnDelete;
-        private TextView tvName, tvPosition, tvStatus, value;
+        private TextView tvName, tvPosition, tvStatus, value, time;
 
         public DeviceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,6 +108,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             tvPosition = itemView.findViewById(R.id.tvPosition);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             value = itemView.findViewById(R.id.value);
+            time = itemView.findViewById(R.id.time);
         }
     }
 

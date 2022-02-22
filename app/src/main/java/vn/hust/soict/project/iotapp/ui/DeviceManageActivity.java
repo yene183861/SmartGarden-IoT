@@ -14,12 +14,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +46,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vn.hust.soict.project.iotapp.R;
 import vn.hust.soict.project.iotapp.adapter.DeviceListAdapter;
+import vn.hust.soict.project.iotapp.api.ApiService;
+import vn.hust.soict.project.iotapp.api.RetrofitInstance;
 import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
 import vn.hust.soict.project.iotapp.model.Area;
 import vn.hust.soict.project.iotapp.model.DataReceive;
@@ -63,7 +70,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     List<Device> deviceList1;
     boolean isHaveLamp = false;
     boolean isHavePump = false;
-    //Device lamp, pump;
+    Device lamp, pump;
     private DeviceListAdapter adapter;
     private Device deviceForEdit;
     public static final int MSG_GET_DEVICES = 1;
@@ -83,7 +90,6 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         getSupportActionBar().setTitle("Manage Device");
         area = (Area) getIntent().getSerializableExtra("area");
         initUi();
-        //createThread();
         connectMQTT();
         //initHandler();
 
@@ -123,6 +129,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
             if (deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5) {
                 deviceList1.add(deviceList.get(i));
             } else if (deviceList.get(i).getType() == 3) {
+                lamp = deviceList.get(i);
                 isHaveLamp = deviceList.get(i).isStatus();
                 layoutLamp.setVisibility(View.VISIBLE);
                 if (isHaveLamp) {
@@ -130,6 +137,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     controlLamp.setChecked(true);
                 }
             } else {
+                pump = deviceList.get(i);
                 isHavePump = deviceList.get(i).isStatus();
                 layoutPump.setVisibility(View.VISIBLE);
                 if (isHavePump) {
@@ -164,6 +172,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                         if (deviceList.get(i).getType() < 3 || deviceList.get(i).getType() == 5) {
                             deviceList1.add(deviceList.get(i));
                         } else if (deviceList.get(i).getType() == 3) {
+                            lamp = deviceList.get(i);
                             isHaveLamp = deviceList.get(i).isStatus();
                             layoutLamp.setVisibility(View.VISIBLE);
                             if (isHaveLamp) {
@@ -171,6 +180,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                                 controlLamp.setChecked(true);
                             }
                         } else {
+                            pump = deviceList.get(i);
                             isHavePump = deviceList.get(i).isStatus();
                             layoutPump.setVisibility(View.VISIBLE);
                             if (isHavePump) {
@@ -239,13 +249,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         layoutLamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bindDevice();
+                bindDevice(lamp);
             }
         });
         layoutPump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bindDevice();
+                bindDevice(pump);
             }
         });
     }
@@ -258,9 +268,49 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         super.onDestroy();
     }
 
-    private void bindDevice() {
+    private void bindDevice(Device device) {
         AlertDialog dialogBuilder = new AlertDialog.Builder(DeviceManageActivity.this).create();
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_bind_device, null);
+        TextView tvNameDevice = dialogView.findViewById(R.id.tv_name_device);
+        TextView tvAreaDevice = dialogView.findViewById(R.id.tv_area_device);
+        TextView tvNameRealDevice = dialogView.findViewById(R.id.tv_name_realdevice);
+        ScrollView scrollView = dialogView.findViewById(R.id.scrollView);
+        Button btnCancel = dialogView.findViewById(R.id.btn_cancel);
+        Button btnSave = dialogView.findViewById(R.id.btn_save);
+        tvNameDevice.setText(device.getName());
+        tvAreaDevice.setText(device.getArea());
+        tvAreaDevice.setVisibility(View.GONE);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBuilder.dismiss();
+            }
+        });
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
+                Call<Void> call = apiService.bind(DataLocalManager.getTokenServer(), "id");
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.code() == 200) {
+                            device.setStatus(true);
+                        } else {
+                            Toast.makeText(DeviceManageActivity.this, "Ghep noi that bai", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e("bindDevice", "onFailure" + t);
+                        Toast.makeText(DeviceManageActivity.this, "Ghep noi that bai", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogBuilder.dismiss();
+            }
+
+        });
         dialogBuilder.setView(dialogView);
         dialogBuilder.show();
     }
@@ -349,7 +399,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
 
     @Override
     public void onDeviceClick(Device device) {
-        //bindDevice(device);
+        bindDevice(device);
     }
 
     @Override
@@ -401,24 +451,19 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                     @Override
                     public void connectionLost(Throwable cause) {
                         Log.e("subscribe", "Connection was lost!");
-                        connectMQTT();
                     }
 
                     @Override
                     public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            Log.e("time", "" + LocalDateTime.now());
+                        }
                         Log.d("subscribe", "topic>>" + topic);
                         Log.e("message", new String(message.getPayload()));
                         String json = new String(message.getPayload());
                         Gson gson = new Gson(); // khởi tạo Gson
                         DataReceive dataReceive = gson.fromJson(json, DataReceive.class);
-                        Log.e("mmesssss", String.valueOf(dataReceive.getTemperature()));
-                        //DataReceive dataReceive = JSONObject.;
-//                        Log.e("message", dataReceive.getDate().toString());
-//                        Log.e("message", dataReceive.getTime().toString());
-//                        Log.e("message", String.valueOf(dataReceive.getTemperature()));
-//                        Log.e("message", String.valueOf(dataReceive.getHumidity_soil()));
-//                        Log.e("message", String.valueOf(dataReceive.getHumidity_air()));
-                        //deviceList1.clear();
+
                         int size = deviceList1.size();
                         for (int i = 0; i < size; i++) {
                             int type = deviceList1.get(i).getType();
