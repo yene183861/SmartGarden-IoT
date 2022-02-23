@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -89,6 +90,8 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
     public static final String SOILMOIST_TOPIC = "iot-nhom8-20211/garden1/area1/soil";
     private Area area;
 
+    private ImageButton btnTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +112,13 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         deviceListViewModel = new ViewModelProvider(this).get(DeviceListViewModel.class);
         setRcvDevice();
         initListener();
+
+        btnTimer = findViewById(R.id.btn_timer);
+        btnTimer.setOnClickListener(v ->{
+            Intent intent = new Intent(DeviceManageActivity.this, AutomationActivity.class);
+            intent.putExtra("area", area);
+            startActivity(intent);
+        });
     }
 
     private void initUi() {
@@ -451,10 +461,10 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                                 deviceList1.get(i).setValue(dataReceive.getTemperature());
                             } else if (type == 2 && deviceList1.get(i).isStatus()) {
                                 Log.e("Humidity_air", "dataReceive.getHumidity_air()");
-                                deviceList1.get(i).setValue(dataReceive.getHumidity());
+                                deviceList1.get(i).setValue(dataReceive.getSoil());
                             } else if(type == 5 && deviceList1.get(i).isStatus()){
                                 Log.e("getHumidity_soil", "dataReceive.getHumidity_air()");
-                                deviceList1.get(i).setValue(dataReceive.getSoil());
+                                deviceList1.get(i).setValue(dataReceive.getHumidity());
                             }
                         }
                         adapter.setDeviceList(deviceList1);

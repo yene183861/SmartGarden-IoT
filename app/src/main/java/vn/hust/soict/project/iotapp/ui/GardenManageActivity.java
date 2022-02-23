@@ -22,6 +22,7 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -87,6 +88,12 @@ public class GardenManageActivity extends AppCompatActivity implements GardenLis
                 showAddDialog(false);
             }
         });
+
+//        ImageButton btnTimer = findViewById(R.id.btn_timer);
+//        btnTimer.setOnClickListener(v ->{
+//            Intent intent = new Intent(GardenManageActivity.this, AutomationActivity.class);
+//            startActivity(intent);
+//        });
     }
 
     private void showAddDialog(boolean isEdit) {

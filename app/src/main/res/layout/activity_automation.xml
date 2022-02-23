@@ -4,79 +4,197 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_auto"
+        android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="Automation"
-        android:titleTextColor="@color/black"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/green"
+        app:title="Timer">
+        <ImageButton
+            android:id="@+id/btn_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_home_24"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/white"/>
+    </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.textfield.TextInputEditText
+    <RelativeLayout
+        android:id="@+id/ln_startTime"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_auto"
-        android:id="@+id/startDateTime"
-        >
-        <EditText
-            android:id="@+id/startTime"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingBottom="16dp">
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/startTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/start_time"
+                tools:ignore="TextFields"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <ImageButton
+            android:id="@+id/btn_startTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/start_time"
-            tools:ignore="TextFields"/>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_baseline_calendar_month_24" />
+    </RelativeLayout>
 
-    </com.google.android.material.textfield.TextInputEditText>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/endDateTime"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_below="@+id/startDateTime">
-        <EditText
-            android:id="@+id/endTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/end_time"
-            tools:ignore="TextFields"/>
-    </com.google.android.material.textfield.TextInputEditText>
-    <TextView
-        android:id="@+id/tv_chooseGarden"
+    <RelativeLayout
+        android:id="@+id/ln_endTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose garden"/>
+        android:layout_below="@id/ln_startTime"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingBottom="16dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/endTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/end_time"
+                tools:ignore="TextFields"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <ImageButton
+            android:id="@+id/btn_endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_baseline_calendar_month_24"/>
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_chooseArea"
+    <LinearLayout
+        android:id="@+id/ln_pump"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/ln_endTime"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgWatering1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/not_watering" />
+
+        <Switch
+            android:id="@+id/controlWatering1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:switchPadding="5dp"
+            android:text="Watering" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ln_lamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/ln_endTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgLamp1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/lamp_off" />
+
+        <Switch
+            android:id="@+id/controlLamp1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:switchPadding="5dp"
+            android:text="Turn on/off" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ln_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Area"/>
+        android:layout_below="@id/ln_pump"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_chooseGarden"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/garden"
+                tools:ignore="TextFields"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            <EditText
+                android:id="@+id/et_chooseArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/Area"
+                tools:ignore="TextFields"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal">
+
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_cancelAuto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:layout_weight="0.5"
             android:backgroundTint="@color/red"
-            android:text="Cancel"/>
+            android:text="Cancel" />
+
         <Button
-            android:id="@+id/btn_save"
+            android:id="@+id/btn_saveAuto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="0.5"
             android:backgroundTint="@color/blue"
-            android:text="Save"/>
+            android:text="Save" />
     </LinearLayout>
+
 </RelativeLayout>

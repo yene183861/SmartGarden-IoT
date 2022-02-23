@@ -16,7 +16,9 @@ public class Device implements Serializable {
     private int type;
     /*  1 cảm biến nhiệt độ
         2 cảm biến độ ẩm đất
-        3 Cảm biến không khí
+        5 Cảm biến không khí
+        3 đèn
+        4 máy bơm
     */
     private double value;
     private boolean status;

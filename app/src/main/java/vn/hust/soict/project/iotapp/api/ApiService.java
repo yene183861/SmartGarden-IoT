@@ -51,4 +51,6 @@ public interface ApiService {
     Call<List<Device>> getRealDevices(@Header("token") String token,@Query("type") int type);
     @GET("/devices/manage/bind")
     Call<Void> bindDevice(@Header("token") String token, @Query("realId") String realId, @Query("virtualId") String virtualId);
+    @GET("/schedule")
+    Call<Void> schedule(@Header("token") String token, @Query("startTime") String start, @Query("endTime") String end, @Query("action") boolean b, @Query("deviceId") String id);
 }

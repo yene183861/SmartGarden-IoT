@@ -14,7 +14,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:titleTextColor="@android:color/white"
-        android:background="@color/green" />
+        android:background="@color/green"
+        app:title="List devices">
+        <ImageButton
+            android:id="@+id/btn_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_timer_24"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/white"/>
+    </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:id="@+id/layoutInfoArea"
         android:layout_width="match_parent"
@@ -112,7 +122,7 @@
                 android:id="@+id/imgWatering"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/not_watering" />
+                android:src="@drawable/watering" />
 
             <Switch
                 android:id="@+id/controlWatering"
@@ -120,6 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:switchPadding="5dp"
+                android:checked="true"
                 android:text="Watering" />
         </LinearLayout>
 

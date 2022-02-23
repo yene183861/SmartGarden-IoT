@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,6 +78,12 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
                 showAddDialog(false);
             }
         });
+
+//        ImageButton btnTimer = findViewById(R.id.btn_timer);
+//        btnTimer.setOnClickListener(v ->{
+//            Intent intent = new Intent(AreaManageActivity.this, AutomationActivity.class);
+//            startActivity(intent);
+//        });
     }
     private void initUi(){
         btnAddNewArea = findViewById(R.id.btnAddNewArea);
@@ -141,7 +148,7 @@ public class AreaManageActivity extends AppCompatActivity implements AreaListAda
                     areaListViewModel.updateArea(areaForEdit);
                 } else {
                     //call view model
-                    Log.e("id",garden.getId());
+                    //Log.e("id",garden.getId());
                     Area area = new Area(garden.getId(), name, position, acreage);
                     areaListViewModel.insertArea(area);
                 }
