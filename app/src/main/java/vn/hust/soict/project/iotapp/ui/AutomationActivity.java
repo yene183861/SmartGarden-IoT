@@ -27,6 +27,7 @@ import vn.hust.soict.project.iotapp.api.ApiService;
 import vn.hust.soict.project.iotapp.api.RetrofitInstance;
 import vn.hust.soict.project.iotapp.datalocal.DataLocalManager;
 import vn.hust.soict.project.iotapp.model.Area;
+import vn.hust.soict.project.iotapp.model.Device;
 
 public class AutomationActivity extends AppCompatActivity {
     private ImageButton startBtn, endBtn;
@@ -38,13 +39,15 @@ public class AutomationActivity extends AppCompatActivity {
     private Switch controlLamp, controlWatering;
     private EditText garden, area;
     String batdau, ketthuc;
+    Device lamp;
+    //"6214ab6a148723f43b3fe225"
     Area areaObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_automation);
-        areaObject = (Area) getIntent().getSerializableExtra("area");
+        areaObject = (Area) getIntent().getSerializableExtra("area1");
         startBtn = (ImageButton) findViewById(R.id.btn_startTime);
         endBtn = findViewById(R.id.btn_endTime);
         startTime = findViewById(R.id.startTime);
@@ -58,14 +61,14 @@ public class AutomationActivity extends AppCompatActivity {
             showDateTimePicker();
             isStart = false;
         });
-imgLamp = findViewById(R.id.imgLamp1);
-imgWatering = findViewById(R.id.imgWatering1);
+        imgLamp = findViewById(R.id.imgLamp1);
+        imgWatering = findViewById(R.id.imgWatering1);
         controlLamp = (Switch) findViewById(R.id.controlLamp1);
         controlWatering = (Switch) findViewById(R.id.controlWatering1);
         controlLamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     imgLamp.setImageResource(R.drawable.lamp_on);
                 } else {
                     imgLamp.setImageResource(R.drawable.lamp_off);
@@ -76,7 +79,7 @@ imgWatering = findViewById(R.id.imgWatering1);
         controlWatering.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     imgWatering.setImageResource(R.drawable.watering);
                 } else {
                     imgWatering.setImageResource(R.drawable.not_watering);
@@ -86,37 +89,37 @@ imgWatering = findViewById(R.id.imgWatering1);
         });
 
         garden = findViewById(R.id.et_chooseGarden);
-        garden.setText("Vuon Tho");
+        garden.setText(areaObject.getGarden());
         area = findViewById(R.id.et_chooseArea);
         area.setText(areaObject.getName());
 
         btnSave = findViewById(R.id.btn_saveAuto);
         btnSave.setOnClickListener(v -> {
             ApiService apiService = RetrofitInstance.getRetrofitClient().create(ApiService.class);
-//            Call<Void> call = apiService.schedule(DataLocalManager.getTokenServer(), batdau,
-//                    ketthuc, controlLamp.isChecked(), "6214ab6a148723f43b3fe225");
-//            call.enqueue(new Callback<Void>() {
-//                @Override
-//                public void onResponse(Call<Void> call, Response<Void> response) {
-//                    if (response.code() == 200) {
-//                        Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            Call<Void> call = apiService.schedule(DataLocalManager.getTokenServer(), batdau,
+                    ketthuc, controlLamp.isChecked(), lamp.getId());
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.code() == 200) {
+                        Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(AutomationActivity.this, DeviceManageActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(AutomationActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e("schedule", "" + t);
+                    Toast.makeText(AutomationActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+//
+//            Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
 //                        Intent intent = new Intent(AutomationActivity.this, DeviceManageActivity.class);
 //                        startActivity(intent);
-//                    } else {
-//                        Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-
-//                @Override
-//                public void onFailure(Call<Void> call, Throwable t) {
-//                    Log.e("schedule", "" + t);
-//                    Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-            Toast.makeText(AutomationActivity.this, "Success", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(AutomationActivity.this, DeviceManageActivity.class);
-            startActivity(intent);
         });
 
         btnCancel = findViewById(R.id.btn_cancelAuto);

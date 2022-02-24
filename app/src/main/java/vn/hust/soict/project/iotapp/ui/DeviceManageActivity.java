@@ -116,7 +116,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
         btnTimer = findViewById(R.id.btn_timer);
         btnTimer.setOnClickListener(v ->{
             Intent intent = new Intent(DeviceManageActivity.this, AutomationActivity.class);
-            intent.putExtra("area", area);
+            intent.putExtra("area1", area);
             startActivity(intent);
         });
     }
@@ -517,6 +517,7 @@ public class DeviceManageActivity extends AppCompatActivity implements DeviceLis
                 }
                 Gson gson = new Gson();
                 String json = gson.toJson(inputMap);
+                Log.e("mess publish", "" + json);
                 MqttMessage message = new MqttMessage(json.getBytes("UTF-8"));
                 client.publish(topic, message);
             } catch (UnsupportedEncodingException | MqttException e) {

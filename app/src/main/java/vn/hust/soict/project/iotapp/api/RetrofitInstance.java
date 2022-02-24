@@ -7,8 +7,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInstance {
-
-    public static String BASE_URL = "http://192.168.1.5:3002";
+//run on real device: base url is laptop's ip
+    public static String BASE_URL = "http://192.168.1.7:3002";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitClient() {
